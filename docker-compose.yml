@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  postgis:
+    image: postgis/postgis:15-3.4
+    container_name: postgis
+    restart: always
+    environment:
+      POSTGRES_DB: gis
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    volumes:
+      - ./data:/data
+      - postgis_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  tileserver:
+    image: maptiler/tileserver-gl
+    container_name: tileserver
+    restart: always
+    volumes:
+      - ./data/vietnam.mbtiles:/data/vietnam.mbtiles
+      - ./styles:/styles
+    environment:
+      - TILESERVER_CONFIG=/styles/style.json
+    ports:
+      - "8080:8080"
+
+  # osrm-builder:
+  #   image: osrm/osrm-backend:latest
+  #   container_name: osrm-builder
+  #   command: >
+  #     bash -c "
+  #       osrm-extract -p /opt/car.lua /data/vietnam-latest.osm.pbf &&
+  #       osrm-partition /data/vietnam-latest.osrm &&
+  #       osrm-customize /data/vietnam-latest.osrm
+  #     "
+  #   volumes:
+  #     - ./data:/data
+  #   depends_on:
+  #     - postgis
+  #   restart: "no"
+
+  osrm-server:
+    image: osrm/osrm-backend:latest
+    container_name: osrm-server
+    command: >
+      osrm-routed --algorithm mld /data/vietnam-latest.osrm
+    volumes:
+      - ./data:/data
+    ports:
+      - "3000:5000"
+    # depends_on:
+    # - osrm-builder
+    restart: unless-stopped
+
+volumes:
+  postgis_data:

@@ -1,0 +1,39 @@
+{
+  "options": {
+    "paths": {
+      "fonts": "fonts",
+      "styles": "styles"
+    }
+  },
+  "styles": {
+    "osm-bright": {
+      "style": "osm-bright/style.json",
+      "tilejson": {
+        "type": "vector"
+      }
+    },
+    "maptiler-basic": {
+      "style": "maptiler-basic/style.json",
+      "tilejson": {
+        "type": "vector"
+      }
+    },
+    "streets-v4": {
+      "style": "streets-v4/style.json",
+      "tilejson": {
+        "type": "vector"
+      }
+    },
+    "streets-simple": {
+      "style": "streets-simple/style.json",
+      "tilejson": {
+        "type": "vector"
+      }
+    }
+  },
+  "data": {
+    "openmaptiles": {
+      "mbtiles": "vietnam.mbtiles"
+    }
+  }
+}
