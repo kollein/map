@@ -16,6 +16,7 @@
       #map {
         flex: 3;
         height: 100%;
+        position: relative;
       }
       #info {
         flex: 1;
@@ -58,6 +59,39 @@
         background: #007bff;
         color: white;
       }
+      #search-box {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 999;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        padding: 8px;
+        width: 220px;
+      }
+      #search-input {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      #suggestions {
+        margin-top: 4px;
+        max-height: 150px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        display: none;
+      }
+      .suggestion {
+        padding: 6px;
+        cursor: pointer;
+      }
+      .suggestion:hover {
+        background: #e6f7ff;
+      }
       #currentRoad {
         margin-top: 8px;
         font-weight: 500;
@@ -67,15 +101,19 @@
 
   <body>
     <div id="map"></div>
+
     <div id="info">
+      <div id="search-box">
+        <input id="search-input" placeholder="🔍 Tìm địa điểm..." />
+        <div id="suggestions"></div>
+      </div>
+      <button id="toggle-style-btn">Đổi kiểu bản đồ</button>
+      <button id="gps-btn">🚗 GPS Follow</button>
       <h3>Hướng đi chi tiết</h3>
       <div id="directions"></div>
       <div id="currentRoad"></div>
       <p><b>Hướng dẫn:</b><br />Click chọn <b>điểm bắt đầu</b> → <b>điểm đến</b></p>
     </div>
-
-    <button id="toggle-style-btn">Đổi kiểu bản đồ</button>
-    <button id="gps-btn">🚗 GPS Follow</button>
 
     <script>
       // ======== Cấu hình bản đồ ========
@@ -106,7 +144,7 @@
       let routeCoords = [];
       let stepsData = [];
 
-      // ======== Khi click trên bản đồ ========
+      // ======== Click để chọn điểm ========
       map.on("click", (e) => {
         if (!start) {
           start = [e.lngLat.lng, e.lngLat.lat];
@@ -166,7 +204,7 @@
         map.fitBounds(bounds, { padding: 60 });
       }
 
-      // ======== Hiển thị hướng đi chi tiết ========
+      // ======== Hướng đi chi tiết ========
       function showSteps(steps) {
         const container = document.getElementById("directions");
         container.innerHTML = "";
@@ -230,7 +268,6 @@
           marker.setLngLat(current);
           map.easeTo({ center: current, zoom: 15, duration: 800 });
 
-          // cập nhật tên đường hiện tại
           const nearestStep = stepsData.find((s) =>
             s.geometry.coordinates.some(
               (c) => Math.abs(c[0] - current.lng) < 0.0005 && Math.abs(c[1] - current.lat) < 0.0005
@@ -269,7 +306,7 @@
         }
       };
 
-      // ======== Đổi kiểu bản đồ (và khôi phục route + markers) ========
+      // ======== Đổi kiểu bản đồ ========
       document.getElementById("toggle-style-btn").onclick = () => {
         if (currentStyle === "street") currentStyle = "dark";
         else if (currentStyle === "dark") currentStyle = "satellite";
@@ -277,12 +314,8 @@
         map.setStyle(styles[currentStyle]);
 
         map.once("styledata", () => {
-          if (start) {
-            startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
-          }
-          if (end) {
-            endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
-          }
+          if (start) startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
+          if (end) endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
           if (routeCoords.length) {
             const geojson = {
               type: "LineString",
@@ -292,6 +325,49 @@
           }
         });
       };
+
+      // ======== 🔍 Tìm kiếm địa điểm (Nominatim) ========
+      const input = document.getElementById("search-input");
+      const suggestions = document.getElementById("suggestions");
+      let searchTimeout = null;
+
+      input.addEventListener("input", () => {
+        clearTimeout(searchTimeout);
+        const query = input.value.trim();
+        if (query.length < 2) {
+          suggestions.style.display = "none";
+          return;
+        }
+        searchTimeout = setTimeout(async () => {
+          const url = `https://nominatim.openstreetmap.org/search?polygon_geojson=1&accept-language=vi&format=jsonv2&q=${encodeURIComponent(
+            query
+          )}`;
+          const res = await fetch(url);
+          const data = await res.json();
+          showSuggestions(data);
+        }, 300);
+      });
+
+      function showSuggestions(results) {
+        suggestions.innerHTML = "";
+        if (!results.length) {
+          suggestions.style.display = "none";
+          return;
+        }
+        results.forEach((r) => {
+          const div = document.createElement("div");
+          div.className = "suggestion";
+          div.textContent = r.display_name;
+          div.onclick = () => {
+            map.flyTo({ center: [r.lon, r.lat], zoom: 14 });
+            new maplibregl.Marker().setLngLat([r.lon, r.lat]).addTo(map);
+            input.value = r.display_name;
+            suggestions.style.display = "none";
+          };
+          suggestions.appendChild(div);
+        });
+        suggestions.style.display = "block";
+      }
     </script>
   </body>
 </html>
