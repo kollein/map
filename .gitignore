@@ -1,4 +1,5 @@
 node_modules/
+*.har
 *.geojson
 *.mbtiles
 data/vietnam-latest.osm.pbf
