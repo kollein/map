@@ -1,30 +1,34 @@
+// crawl_baclieu_spiral.js
 import puppeteer from "puppeteer";
 import fs from "fs-extra";
 import path from "path";
 
+await fs.ensureDir("./google-map-crawler/output");
+
 // ===== CONFIG =====
-const keyword = "quán ăn";
-const start = { lat: 9.280557, lng: 105.7086667 };
+const keyword = process.argv[2];
+console.log("keyword:", keyword);
+const start = { lat: 9.2818974, lng: 105.7197254 }; // Tiem Banh Huynh Minh Thanh
 
 // Bounding box tỉnh Bạc Liêu
 const bounds = { minLat: 8.993, maxLat: 9.55, minLng: 105.35, maxLng: 105.88 };
 
-// Output file (resume nếu file tồn tại)
-const outputFile = path.resolve("./baclieu_quanan_grid_resume.json");
+// Output files
+const outputFile = path.resolve(`./google-map-crawler/output/baclieu_${keyword}.json`);
+const stateFile = path.resolve(`./google-map-crawler/output/state_${keyword}.json`);
 
-// Grid & crawl tuning
-const STEP_METERS = 3000; // mỗi ô dịch chuyển ~500 m
+// Crawl parameters
+const STEP_METERS = 3000;
 const MAX_SCROLL_ITER = 10;
-const SCROLL_DELAY_MIN = 1200;
-const SCROLL_DELAY_VAR = 800;
-const SAVE_EVERY = 2;
+const SCROLL_DELAY_MIN = 1000;
+const SCROLL_DELAY_VAR = 400;
+const SAVE_THRESHOLD = 1;
 const ZOOM = 14;
 const JITTER_DEG = 0.001;
 
 // ===== STATE =====
-const visited = new Set(); // chứa keys "lat,lng"
-const results = [];
-let browser;
+const visited = new Set();
+let results = [];
 
 // ===== UTILS =====
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -38,41 +42,82 @@ function stepLngDegAt(lat) {
   return STEP_METERS / (111000 * Math.cos((lat * Math.PI) / 180));
 }
 
-// safe save
-async function safeSave() {
-  await fs.writeJSON(outputFile, results, { spaces: 2 });
-  console.log(`💾 Saved ${results.length} items -> ${outputFile}`);
+// ===== Distance Calculator =====
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// resume
+// ===== File Ops =====
+async function safeSave() {
+  const filtered = results.map(({ name, lat, lng }) => ({ name, lat, lng })); // bỏ href
+  await fs.writeJSON(outputFile, filtered, { spaces: 2 });
+  console.log(`💾 Saved ${filtered.length} items for keyword ${keyword} → ${outputFile}`);
+}
+
 async function loadResume() {
   if (await fs.pathExists(outputFile)) {
-    try {
-      const arr = await fs.readJSON(outputFile);
-      if (Array.isArray(arr)) {
-        arr.forEach((it) => {
-          if (it && typeof it.lat === "number" && typeof it.lng === "number") {
-            results.push(it);
-            visited.add(keyOf(it.lat, it.lng));
-          }
-        });
-        console.log(`🔁 Resume: loaded ${results.length} places`);
-      }
-    } catch (e) {
-      console.warn("⚠ Could not parse existing output file, starting fresh.", e.message);
+    const arr = await fs.readJSON(outputFile);
+    if (Array.isArray(arr)) {
+      results = arr;
+      arr.forEach((it) => visited.add(keyOf(it.lat, it.lng)));
+      console.log(`🔁 Resume loaded ${arr.length} items for keyword ${keyword}`);
     }
-  } else console.log("🆕 No existing output file — starting fresh.");
+  }
 }
 
-// scroll helper
-async function scrollUntilStable(page) {
+async function saveState(state) {
+  await fs.writeJSON(stateFile, state, { spaces: 2 });
+  console.log(
+    `🧭 Saved spiral state → step=${state.step}, moveCount=${state.moveCount}, direction=${state.direction} for keyword ${keyword}`
+  );
+}
+
+async function loadState() {
+  if (await fs.pathExists(stateFile)) {
+    const s = await fs.readJSON(stateFile);
+    console.log(`🔁 Resume spiral state for keyword ${keyword}:`, s);
+    return s;
+  }
+  return null;
+}
+
+// ===== PAGE SCRAPER =====
+async function getPageData(browser, keyword, lat, lng) {
+  const jitterLat = lat + (Math.random() * 2 - 1) * JITTER_DEG;
+  const jitterLng = lng + (Math.random() * 2 - 1) * JITTER_DEG;
+  const url = `https://www.google.com/maps/search/${encodeURIComponent(keyword)}/@${jitterLat},${jitterLng},${ZOOM}z`;
+
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1280, height: 800 });
+  await page.setUserAgent(
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+  );
+
+  console.log(`🌍 Crawling ${keyword} @ (${jitterLat.toFixed(5)}, ${jitterLng.toFixed(5)})`);
+  await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
+
+  try {
+    await page.waitForSelector('[aria-label^="Results for"]', { timeout: 20000 });
+  } catch {
+    console.log(`⚠️ No results found for keyword ${keyword}, skipping.`);
+    await page.close();
+    return [];
+  }
+
+  // Scroll to load all results
   const feedSelector = 'div[role="feed"]';
   let prevCount = 0;
   for (let i = 0; i < MAX_SCROLL_ITER; i++) {
     const count = await page.$$eval(".Nv2PK.THOPZb.CpccDe", (els) => els.length);
     if (count > prevCount) {
       prevCount = count;
-      console.log(`  📜 loaded ${count} items (scroll iter ${i + 1})`);
+      console.log(`  📜 loaded ${count} items (scroll ${i + 1}) for keyword ${keyword}`);
       await page.evaluate((sel) => {
         const feed = document.querySelector(sel);
         if (feed) feed.scrollBy(0, feed.scrollHeight);
@@ -81,102 +126,121 @@ async function scrollUntilStable(page) {
       await sleep(SCROLL_DELAY_MIN + Math.random() * SCROLL_DELAY_VAR);
     } else break;
   }
-  return prevCount;
-}
 
-// extract items
-async function extractPlaces(page) {
-  return await page.$$eval(".Nv2PK.THOPZb.CpccDe", (els) =>
-    els
+  const items = await page.$$eval(".Nv2PK.THOPZb.CpccDe", (nodes) => {
+    return nodes
       .map((el) => {
-        const name = el.querySelector(".qBF1Pd")?.textContent?.trim();
-        const url = el.querySelector("a.hfpxzc")?.href || "";
-        const m = url.match(/!3d([-.\d]+)!4d([-.\d]+)/);
-        const lat = m ? parseFloat(m[1]) : null;
-        const lng = m ? parseFloat(m[2]) : null;
-        return name && lat && lng ? { name, lat, lng, url } : null;
+        const a = el.querySelector("a");
+        if (!a) return null;
+        const name = a.getAttribute("aria-label") || "";
+        const href = a.getAttribute("href") || "";
+        const match = href.match(/!3d([0-9.\-]+)!4d([0-9.\-]+)/);
+        if (!match) return null;
+        return { name, lat: parseFloat(match[1]), lng: parseFloat(match[2]) };
       })
-      .filter(Boolean)
-  );
+      .filter(Boolean);
+  });
+
+  await page.close();
+  return items;
 }
 
-// crawl single cell
-async function crawlCell(lat, lng) {
-  const key = keyOf(lat, lng);
-  if (visited.has(key)) return;
-  visited.add(key);
-  if (!inBounds(lat, lng)) return;
+// ===== MAIN CRAWLER (SPIRAL) =====
+async function crawlSpiral(browser) {
+  const stepLng = stepLngDegAt(start.lat);
+  let state = (await loadState()) || {
+    lat: start.lat,
+    lng: start.lng,
+    direction: 0,
+    step: 1,
+    moveCount: 0,
+  };
 
-  const jitterLat = lat + (Math.random() * 2 - 1) * JITTER_DEG;
-  const jitterLng = lng + (Math.random() * 2 - 1) * JITTER_DEG;
-  const url = `https://www.google.com/maps/search/${encodeURIComponent(keyword)}/@${jitterLat},${jitterLng},${ZOOM}z`;
+  while (true) {
+    const { lat, lng, direction, step, moveCount } = state;
+    const key = keyOf(lat, lng);
+    if (visited.has(key) || !inBounds(lat, lng)) {
+      console.log(`⏭️ Skipping visited/out-of-bound for keyword ${keyword}:`, key);
+      break;
+    }
+    visited.add(key);
 
-  console.log(`🌍 Crawling ${keyword} @ ${jitterLat.toFixed(5)},${jitterLng.toFixed(5)}`);
-
-  const page = await browser.newPage();
-  try {
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
-    await sleep(2000);
-    await scrollUntilStable(page);
-    const places = await extractPlaces(page);
-
+    const items = await getPageData(browser, keyword, lat, lng);
     let added = 0;
-    for (const p of places) {
-      const pKey = keyOf(p.lat, p.lng);
-      if (!visited.has(pKey) && inBounds(p.lat, p.lng)) {
-        visited.add(pKey);
-        results.push(p);
+    for (const item of items) {
+      const id = keyOf(item.lat, item.lng);
+      if (!visited.has(id) && inBounds(item.lat, item.lng)) {
+        results.push(item);
+        visited.add(id);
         added++;
       }
     }
+    console.log(`✅ Found ${items.length} items for keyword ${keyword}, added ${added} new.`);
+    if (added >= SAVE_THRESHOLD) await safeSave();
 
-    console.log(`✅ Found ${places.length}, added ${added} new places.`);
-    if (added > 0) await safeSave();
-  } catch (e) {
-    console.error(`❌ Error crawling ${lat},${lng}`, e.message);
-  } finally {
-    await page.close();
-  }
-}
+    // ===== Spiral direction logic =====
+    let newMoveCount = moveCount + 1;
+    let newDirection = direction;
+    let newStep = step;
+    if (newMoveCount > newStep) {
+      newMoveCount = 1;
+      newDirection = (direction + 1) % 4;
+      if (newDirection === 0 || newDirection === 2) newStep++;
+    }
 
-// main loop: quét theo grid (lên/xuống/trái/phải)
-async function crawlGrid() {
-  console.log("🚀 Starting browser...");
-  browser = await puppeteer.launch({ headless: true });
+    let nextLat = lat;
+    let nextLng = lng;
+    switch (newDirection) {
+      case 0:
+        nextLng += stepLng;
+        break;
+      case 1:
+        nextLat -= stepLatDeg;
+        break;
+      case 2:
+        nextLng -= stepLng;
+        break;
+      case 3:
+        nextLat += stepLatDeg;
+        break;
+    }
 
-  const stepLat = stepLatDeg;
-  let current = { ...start };
-  let queue = [current];
-  const directions = [
-    { dx: 0, dy: stepLat, name: "⬆️ lên" },
-    { dx: 0, dy: -stepLat, name: "⬇️ xuống" },
-    { dx: stepLngDegAt(current.lat), dy: 0, name: "➡️ phải" },
-    { dx: -stepLngDegAt(current.lat), dy: 0, name: "⬅️ trái" },
-  ];
+    const dist = haversine(start.lat, start.lng, nextLat, nextLng).toFixed(2);
+    const dirEmoji = ["➡️", "⬇️", "⬅️", "⬆️"][newDirection];
+    console.log(
+      `↪️ Dịch chuyển ${dirEmoji} (${nextLat.toFixed(5)}, ${nextLng.toFixed(
+        5
+      )}) for keyword ${keyword} ~ ${dist} km từ tâm`
+    );
 
-  while (queue.length > 0) {
-    const { lat, lng } = queue.shift();
-    if (!inBounds(lat, lng)) continue;
+    // Save new state
+    state = { lat: nextLat, lng: nextLng, direction: newDirection, step: newStep, moveCount: newMoveCount };
+    await saveState(state);
 
-    await crawlCell(lat, lng);
-
-    // thêm các ô lân cận
-    for (const dir of directions) {
-      const next = { lat: lat + dir.dy, lng: lng + dir.dx };
-      if (!inBounds(next.lat, next.lng)) continue;
-      const key = keyOf(next.lat, next.lng);
-      if (!visited.has(key)) {
-        console.log(`   ↳ Dịch chuyển ${dir.name} → (${next.lat.toFixed(5)}, ${next.lng.toFixed(5)})`);
-        queue.push(next);
-      }
+    if (!inBounds(nextLat, nextLng)) {
+      console.log(`🛑 Reached boundary, stopping spiral crawl for keyword ${keyword}.`);
+      break;
     }
   }
 
   await safeSave();
-  await browser.close();
-  console.log("✅ Crawl completed!");
 }
 
-// ===== RUN =====
-await loadResume();
-await crawlGrid();
+// ===== MAIN =====
+(async () => {
+  await loadResume();
+
+  const browser = await puppeteer.launch({
+    headless: true, // ✅ không mở cửa sổ trình duyệt
+    args: ["--no-sandbox", "--disable-setuid-sandbox"], // ⚡ tối ưu cho môi trường server
+  });
+
+  try {
+    await crawlSpiral(browser);
+  } catch (err) {
+    console.error("❌ Error:", err);
+  } finally {
+    await browser.close();
+    await safeSave();
+  }
+})();
