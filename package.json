@@ -22,9 +22,12 @@
   "dependencies": {
     "@mapbox/vector-tile": "^2.0.4",
     "express": "^5.1.0",
-    "pbf": "^4.0.1"
+    "fs-extra": "^11.3.2",
+    "pbf": "^4.0.1",
+    "puppeteer": "^24.27.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  }
+  },
+  "type": "module"
 }

@@ -395,7 +395,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(236, 236, 236, 0.8)",
+        "line-color": "rgba(236, 236, 236, 1)",
         "line-width": {
           "base": 1.55,
           "stops": [
@@ -557,7 +557,7 @@
             [13, 4.73],
             [15, 9.9],
             [17, 21.53],
-            [18, 32]
+            [20, 52]
           ]
         },
         "line-opacity": 1
@@ -588,7 +588,7 @@
             [13, 4.73],
             [15, 9.9],
             [17, 21.53],
-            [20, 32]
+            [20, 50]
           ]
         },
         "line-opacity": 1
@@ -756,15 +756,15 @@
             [13, 4.73],
             [15, 9.9],
             [17, 21.53],
-            [20, 32]
+            [20, 0]
           ]
         },
         "line-width": {
           "base": 1,
           "stops": [
             [12, 0.5],
-            [16, 1],
-            [20, 2]
+            [17, 0.1],
+            [18, 0]
           ]
         }
       }
@@ -837,7 +837,7 @@
       "source": "openmaptiles",
       "source-layer": "boundary",
       "minzoom": 0,
-      "maxzoom": 5,
+      "maxzoom": 24,
       "filter": ["all", ["<=", "admin_level", 2], ["==", "$type", "LineString"], ["!has", "claimed_by"]],
       "layout": {
         "line-cap": "round",
@@ -860,7 +860,8 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "boundary",
-      "minzoom": 5,
+      "minzoom": 0,
+      "maxzoom": 24,
       "filter": ["all", ["<=", "admin_level", 2], ["==", "$type", "LineString"]],
       "layout": {
         "line-cap": "round",
@@ -884,9 +885,9 @@
       "source": "openmaptiles",
       "source-layer": "poi",
       "minzoom": 14,
-      "filter": ["all", ["==", "$type", "Point"], ["<=", "rank", 100]],
+      "filter": ["all", ["==", "$type", "Point"], ["<=", "rank", 30]],
       "layout": {
-        "text-optional": true,
+        "text-optional": false,
         "text-line-height": 1.2,
         "text-size": {
           "stops": [
@@ -895,21 +896,21 @@
           ]
         },
         "text-allow-overlap": false,
-        "icon-image": "marker",
-        "icon-rotation-alignment": "auto",
+        "icon-image": {
+          "stops": [
+            [14, "{subclass}"],
+            [15, "{subclass}"]
+          ]
+        },
         "text-ignore-placement": false,
         "text-font": ["Roboto Regular"],
-        "icon-allow-overlap": false,
         "text-padding": 1,
-        "visibility": "none",
+        "visibility": "visible",
         "text-offset": [0, 1],
-        "icon-optional": false,
-        "icon-size": 1.2,
         "text-anchor": "top",
         "text-field": "{name:latin}",
         "text-letter-spacing": 0.02,
-        "text-max-width": 8,
-        "icon-ignore-placement": false
+        "text-max-width": 8
       },
       "paint": {
         "text-color": "green",
