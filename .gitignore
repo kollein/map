@@ -1,5 +1,9 @@
 node_modules/
-data/vietnam.mbtiles
+*.geojson
+*.mbtiles
 data/vietnam-latest.osm.pbf
 data/vietnam-latest.osrm*
 data/fonts/*
+data/tiles_*
+crawler/tiles_*
+venv/
