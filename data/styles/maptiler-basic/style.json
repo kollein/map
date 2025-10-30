@@ -14,9 +14,9 @@
       "type": "vector",
       "url": "mbtiles://vietnam"
     },
-    "poi_custom": {
+    "composite": {
       "type": "vector",
-      "url": "mbtiles://poi_custom"
+      "url": "mbtiles://composite"
     }
   },
   "sprite": "{styleJsonFolder}/sprite",
@@ -84,7 +84,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "fill-color": "hsl(205, 56%, 73%)"
+        "fill-color": "#86cbfa"
       }
     },
     {
@@ -97,7 +97,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "fill-color": "hsl(205, 56%, 73%)",
+        "fill-color": "#86cbfa",
         "fill-opacity": 0.7
       }
     },
@@ -188,7 +188,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "hsl(205, 56%, 73%)",
+        "line-color": "#86cbfa",
         "line-dasharray": [3, 3],
         "line-gap-width": {
           "stops": [
@@ -221,7 +221,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "hsl(205, 56%, 73%)",
+        "line-color": "#86cbfa",
         "line-opacity": 1,
         "line-width": {
           "base": 1.4,
@@ -247,7 +247,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "hsl(205, 56%, 73%)",
+        "line-color": "#86cbfa",
         "line-dasharray": [2, 1],
         "line-opacity": 1,
         "line-width": {
@@ -366,8 +366,7 @@
       "filter": ["all", ["==", "$type", "Polygon"], ["in", "brunnel", "bridge"]],
       "layout": {},
       "paint": {
-        "fill-color": "rgb(255, 255, 0)",
-        "fill-opacity": 0.25
+        "fill-color": "rgba(255, 255, 0, 0.25)"
       }
     },
     {
@@ -547,7 +546,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(210, 218, 227, 1)",
+        "line-color": ["interpolate", ["linear"], ["zoom"], 5, "#d9dfe7", 16, "#c4ceda", 24, "#a9bac9"],
         "line-width": {
           "base": 1.2,
           "stops": [
@@ -578,18 +577,18 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(210, 218, 227, 1)",
+        "line-color": ["interpolate", ["linear"], ["zoom"], 5, "#d9dfe7", 16, "#c4ceda", 24, "#a9bac9"],
         "line-width": {
           "base": 1.2,
           "stops": [
-            [5, 0.1],
-            [7, 0.27],
-            [9, 0.64],
-            [11, 1],
-            [13, 3.39],
-            [15, 7.68],
-            [17, 17.32],
-            [18, 26]
+            [5, 0.75],
+            [7, 0.95],
+            [9, 1.41],
+            [11, 2.43],
+            [13, 4.73],
+            [15, 9.9],
+            [17, 21.53],
+            [20, 32]
           ]
         },
         "line-opacity": 1
@@ -609,10 +608,8 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(210, 218, 227, 1)",
-        "line-dasharray": [1],
-        "line-opacity": 1,
-        "line-width": 1
+        "line-color": "purple",
+        "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1, 10, 6, 15, 18, 20, 24]
       }
     },
     {
@@ -694,7 +691,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "hsl(205, 56%, 73%)",
+        "line-color": "#86cbfa",
         "line-width": {
           "base": 1.55,
           "stops": [
@@ -748,19 +745,26 @@
         "line-join": "miter"
       },
       "paint": {
-        "line-color": "#dedede",
+        "line-color": "#a9bac9",
         "line-gap-width": {
-          "base": 1.55,
+          "base": 2,
           "stops": [
-            [4, 0.25],
-            [20, 30]
+            [5, 0.75],
+            [7, 0.95],
+            [9, 1.41],
+            [11, 2.43],
+            [13, 4.73],
+            [15, 9.9],
+            [17, 21.53],
+            [20, 32]
           ]
         },
         "line-width": {
-          "base": 1.6,
+          "base": 1,
           "stops": [
             [12, 0.5],
-            [20, 10]
+            [16, 1],
+            [20, 2]
           ]
         }
       }
@@ -772,11 +776,11 @@
       "source-layer": "transportation",
       "filter": ["all", ["==", "$type", "LineString"], ["==", "brunnel", "bridge"], ["==", "class", "minor_road"]],
       "layout": {
-        "line-cap": "round",
-        "line-join": "round"
+        "line-cap": "butt",
+        "line-join": "miter"
       },
       "paint": {
-        "line-color": "#efefef",
+        "line-color": "green",
         "line-width": {
           "base": 1.55,
           "stops": [
@@ -798,15 +802,16 @@
         ["in", "class", "primary", "secondary", "tertiary", "trunk"]
       ],
       "layout": {
-        "line-cap": "round",
-        "line-join": "round"
+        "line-cap": "butt",
+        "line-join": "miter"
       },
       "paint": {
-        "line-color": "rgba(236, 236, 236, 0.8)",
+        "line-color": ["interpolate", ["linear"], ["zoom"], 5, "#d9dfe7", 16, "#c4ceda", 24, "#a9bac9"],
         "line-width": {
           "base": 1.4,
           "stops": [
             [6, 0.5],
+            [16, 1],
             [20, 30]
           ]
         }
@@ -822,7 +827,7 @@
         "visibility": "visible"
       },
       "paint": {
-        "line-color": "hsla(0, 0%, 60%, 0.5)",
+        "line-color": "hsla(0, 0%, 60%, 0)",
         "line-dasharray": [2, 1]
       }
     },
@@ -1060,9 +1065,55 @@
       }
     },
     {
+      "id": "poi_vinh",
+      "type": "symbol",
+      "source": "composite",
+      "source-layer": "poi_vinh",
+      "minzoom": 17,
+      "maxzoom": 24,
+      "filter": ["all", ["!in", "maki", "campsite", "cemetery", "dog-park", "park", "golf", "swimming", "zoo"]],
+      "layout": {
+        "text-optional": true,
+        "text-line-height": 1.2,
+        "text-size": {
+          "stops": [
+            [16, 11],
+            [20, 13]
+          ]
+        },
+        "text-allow-overlap": false,
+        "icon-image": {
+          "stops": [
+            [16, "{maki}"],
+            [20, "{maki}"]
+          ]
+        },
+        "icon-rotation-alignment": "auto",
+        "text-ignore-placement": false,
+        "text-font": ["Roboto Regular"],
+        "icon-allow-overlap": false,
+        "text-padding": 1,
+        "visibility": "visible",
+        "text-offset": [0, 1],
+        "icon-optional": false,
+        "icon-size": 1.0,
+        "text-anchor": "top",
+        "text-field": "{name}",
+        "text-letter-spacing": 0.02,
+        "text-max-width": 8,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-blur": 0,
+        "text-color": "rgba(25, 118, 210, 1)",
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(255, 255, 255, 1)"
+      }
+    },
+    {
       "id": "poi_custom",
       "type": "symbol",
-      "source": "poi_custom",
+      "source": "composite",
       "source-layer": "poi_custom",
       "minzoom": 14,
       "maxzoom": 24,

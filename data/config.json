@@ -19,8 +19,8 @@
     "vietnam": {
       "mbtiles": "vietnam.mbtiles"
     },
-    "poi_custom": {
-      "mbtiles": "poi_custom.mbtiles"
+    "composite": {
+      "mbtiles": "composite.mbtiles"
     }
   }
 }

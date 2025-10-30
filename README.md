@@ -7,7 +7,7 @@ tileserver-gl --config ./data/config.json
 ## Custom poi (point of interest)
 
 1. Build custom.mbtiles file from geojson file using tippecanoe tool
-   The name of the file poi_custom.geojson is the `source-layer` to use later
+   The name of the file `poi_custom.geojson` is used to define the `source-layer` and the `id`
 
 ```
 tippecanoe -o poi_custom.mbtiles poi_custom.geojson --force

@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:tileserver": "nodemon --watch ./data/styles/ --ext json --exec \"npx tileserver-gl --config ./data/config.json\""
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
     "@mapbox/vector-tile": "^2.0.4",
     "express": "^5.1.0",
     "pbf": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
