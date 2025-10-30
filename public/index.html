@@ -150,25 +150,25 @@
       let stepsData = [];
 
       // ======== Click để chọn điểm ========
-      map.on("click", (e) => {
-        if (!start) {
-          start = [e.lngLat.lng, e.lngLat.lat];
-          startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
-        } else if (!end) {
-          end = [e.lngLat.lng, e.lngLat.lat];
-          endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
-          getRoute(start, end);
-        } else {
-          // Reset
-          start = end = null;
-          if (startMarker) startMarker.remove();
-          if (endMarker) endMarker.remove();
-          if (map.getLayer("route")) map.removeLayer("route");
-          if (map.getSource("route")) map.removeSource("route");
-          document.getElementById("directions").innerHTML = "";
-          document.getElementById("currentRoad").innerText = "";
-        }
-      });
+      // map.on("click", (e) => {
+      //   if (!start) {
+      //     start = [e.lngLat.lng, e.lngLat.lat];
+      //     startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
+      //   } else if (!end) {
+      //     end = [e.lngLat.lng, e.lngLat.lat];
+      //     endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
+      //     getRoute(start, end);
+      //   } else {
+      //     // Reset
+      //     start = end = null;
+      //     if (startMarker) startMarker.remove();
+      //     if (endMarker) endMarker.remove();
+      //     if (map.getLayer("route")) map.removeLayer("route");
+      //     if (map.getSource("route")) map.removeSource("route");
+      //     document.getElementById("directions").innerHTML = "";
+      //     document.getElementById("currentRoad").innerText = "";
+      //   }
+      // });
 
       // ======== Lấy tuyến đường từ OSRM ========
       async function getRoute(start, end) {
@@ -375,6 +375,9 @@
       }
 
       map.on("click", (e) => {
+        const zoom = map.getZoom(); // Lấy zoom hiện tại
+        console.log("Current zoom:", zoom.toFixed(2)); // in ra 2 chữ số thập phân
+
         // e.point is the pixel coordinate of the click
         const features = map.queryRenderedFeatures(e.point);
 

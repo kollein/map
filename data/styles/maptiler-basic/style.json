@@ -884,22 +884,38 @@
       "source": "openmaptiles",
       "source-layer": "poi",
       "minzoom": 14,
-      "filter": ["all", ["==", "$type", "Point"], [">=", "rank", 10]],
+      "filter": ["all", ["==", "$type", "Point"], ["<=", "rank", 100]],
       "layout": {
-        "icon-size": 1,
+        "text-optional": true,
+        "text-line-height": 1.2,
+        "text-size": {
+          "stops": [
+            [16, 11],
+            [20, 13]
+          ]
+        },
+        "text-allow-overlap": false,
+        "icon-image": "marker",
+        "icon-rotation-alignment": "auto",
+        "text-ignore-placement": false,
+        "text-font": ["Roboto Regular"],
+        "icon-allow-overlap": false,
+        "text-padding": 1,
+        "visibility": "none",
+        "text-offset": [0, 1],
+        "icon-optional": false,
+        "icon-size": 1.2,
         "text-anchor": "top",
-        "text-field": "{name:latin}\n{name:nonlatin}",
-        "text-font": ["Open Sans Regular"],
+        "text-field": "{name:latin}",
+        "text-letter-spacing": 0.02,
         "text-max-width": 8,
-        "text-offset": [0, 0.5],
-        "text-size": 11,
-        "visibility": "visible"
+        "icon-ignore-placement": false
       },
       "paint": {
-        "text-color": "#666",
-        "text-halo-blur": 1,
-        "text-halo-color": "rgba(255,255,0,1)",
-        "text-halo-width": 1
+        "text-color": "green",
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-blur": 1
       }
     },
     {
@@ -970,7 +986,7 @@
       "layout": {
         "text-anchor": "center",
         "text-field": "{name:latin}\n{name:nonlatin}",
-        "text-font": ["Open Sans Regular"],
+        "text-font": ["Roboto Medium"],
         "text-max-width": 6,
         "text-size": {
           "stops": [
@@ -981,9 +997,9 @@
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "rgba(255, 255, 0, 1)",
+        "text-color": "#444444",
         "text-halo-blur": 0,
-        "text-halo-color": "rgba(0, 0, 0, 1)",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 2
       }
     },
@@ -996,7 +1012,7 @@
       "filter": ["all", ["==", "$type", "Point"], ["==", "class", "city"]],
       "layout": {
         "text-field": "{name:latin}\n{name:nonlatin}",
-        "text-font": ["Open Sans Regular"],
+        "text-font": ["Roboto Medium"],
         "text-max-width": 10,
         "text-size": {
           "stops": [
@@ -1006,9 +1022,9 @@
         }
       },
       "paint": {
-        "text-color": "rgba(255, 255, 0, 1)",
+        "text-color": "rgba(0, 0, 0, 1)",
         "text-halo-blur": 0,
-        "text-halo-color": "rgba(0, 0, 0, 1)",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 2
       }
     },
@@ -1117,7 +1133,7 @@
       "source-layer": "poi_custom",
       "minzoom": 14,
       "maxzoom": 24,
-      "filter": ["all", ["!in", "maki", "campsite", "cemetery", "dog-park", "park", "golf", "swimming", "zoo"]],
+      "filter": ["all", ["!in", "maki", "zoo"]],
       "layout": {
         "text-optional": true,
         "text-line-height": 1.2,
