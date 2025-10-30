@@ -7,3 +7,4 @@ data/fonts/*
 data/tiles_*
 crawler/tiles_*
 venv/
+resources/

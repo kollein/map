@@ -1,39 +1,26 @@
 {
   "options": {
     "paths": {
+      "root": "./",
+      "mbtiles": "./",
       "fonts": "fonts",
       "styles": "styles"
     }
   },
   "styles": {
-    "osm-bright": {
-      "style": "osm-bright/style.json",
-      "tilejson": {
-        "type": "vector"
-      }
-    },
     "maptiler-basic": {
       "style": "maptiler-basic/style.json",
-      "tilejson": {
-        "type": "vector"
-      }
-    },
-    "streets-v4": {
-      "style": "streets-v4/style.json",
-      "tilejson": {
-        "type": "vector"
-      }
-    },
-    "streets-simple": {
-      "style": "streets-simple/style.json",
       "tilejson": {
         "type": "vector"
       }
     }
   },
   "data": {
-    "openmaptiles": {
+    "vietnam": {
       "mbtiles": "vietnam.mbtiles"
+    },
+    "poi_custom": {
+      "mbtiles": "poi_custom.mbtiles"
     }
   }
 }

@@ -12,17 +12,25 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "mbtiles://{openmaptiles}"
+      "url": "mbtiles://vietnam"
+    },
+    "poi_custom": {
+      "type": "vector",
+      "url": "mbtiles://poi_custom"
     }
   },
   "sprite": "{styleJsonFolder}/sprite",
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
     {
-      "id": "Background",
+      "id": "background",
       "type": "background",
-      "layout": { "visibility": "visible" },
-      "paint": { "background-color": "hsl(0, 0%, 100%)" }
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "background-color": "hsl(0, 0%, 100%)"
+      }
     },
     {
       "id": "landuse-residential",
@@ -310,7 +318,7 @@
         "text-size": 10
       },
       "paint": {
-        "text-color": "rgba(212, 177, 146, 0)"
+        "text-color": "rgba(212, 177, 146, 1)"
       }
     },
     {
@@ -530,20 +538,30 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
+      "minzoom": 7,
+      "maxzoom": 24,
       "filter": ["all", ["==", "$type", "LineString"], ["in", "class", "trunk", "primary"]],
       "layout": {
         "line-cap": "round",
-        "line-join": "round"
+        "line-join": "round",
+        "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(236, 236, 236, 0.8)",
+        "line-color": "rgba(210, 218, 227, 1)",
         "line-width": {
-          "base": 1.4,
+          "base": 1.2,
           "stops": [
-            [6, 0.5],
-            [20, 30]
+            [5, 0.75],
+            [7, 0.95],
+            [9, 1.41],
+            [11, 2.43],
+            [13, 4.73],
+            [15, 9.9],
+            [17, 21.53],
+            [18, 32]
           ]
-        }
+        },
+        "line-opacity": 1
       }
     },
     {
@@ -551,20 +569,30 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
+      "minzoom": 7,
+      "maxzoom": 24,
       "filter": ["all", ["==", "$type", "LineString"], ["in", "class", "secondary", "tertiary"]],
       "layout": {
         "line-cap": "round",
-        "line-join": "round"
+        "line-join": "round",
+        "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(236, 236, 236, 0.8)",
+        "line-color": "rgba(210, 218, 227, 1)",
         "line-width": {
-          "base": 1.4,
+          "base": 1.2,
           "stops": [
-            [6, 0.5],
-            [20, 20]
+            [5, 0.1],
+            [7, 0.27],
+            [9, 0.64],
+            [11, 1],
+            [13, 3.39],
+            [15, 7.68],
+            [17, 17.32],
+            [18, 26]
           ]
-        }
+        },
+        "line-opacity": 1
       }
     },
     {
@@ -572,21 +600,19 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "transportation",
-      "filter": ["all", ["==", "$type", "LineString"], ["==", "class", "motorway"]],
+      "minzoom": 12,
+      "maxzoom": 24,
+      "filter": ["all", ["==", "class", "major"], ["==", "structure", "road"]],
       "layout": {
         "line-cap": "round",
-        "line-join": "round"
+        "line-join": "round",
+        "visibility": "visible"
       },
       "paint": {
-        "line-color": "rgba(236, 236, 236, 0.8)",
-        "line-offset": 0,
-        "line-width": {
-          "base": 1.4,
-          "stops": [
-            [8, 1],
-            [16, 10]
-          ]
-        }
+        "line-color": "rgba(210, 218, 227, 1)",
+        "line-dasharray": [1],
+        "line-opacity": 1,
+        "line-width": 1
       }
     },
     {
@@ -853,7 +879,7 @@
       "source": "openmaptiles",
       "source-layer": "poi",
       "minzoom": 14,
-      "filter": ["all", ["==", "$type", "Point"], ["==", "rank", 1]],
+      "filter": ["all", ["==", "$type", "Point"], [">=", "rank", 10]],
       "layout": {
         "icon-size": 1,
         "text-anchor": "top",
@@ -867,7 +893,7 @@
       "paint": {
         "text-color": "#666",
         "text-halo-blur": 1,
-        "text-halo-color": "rgba(255,255,255,0.75)",
+        "text-halo-color": "rgba(255,255,0,1)",
         "text-halo-width": 1
       }
     },
@@ -903,25 +929,30 @@
       "minzoom": 13,
       "filter": ["==", "$type", "LineString"],
       "layout": {
-        "symbol-placement": "line",
-        "text-field": "{name:latin} {name:nonlatin}",
-        "text-font": ["Open Sans Regular"],
-        "text-letter-spacing": 0.1,
-        "text-rotation-alignment": "map",
         "text-size": {
-          "base": 1.4,
+          "base": 1,
           "stops": [
-            [10, 8],
-            [20, 14]
+            [9, 13],
+            [12, 11.64],
+            [14, 12.73],
+            [16, 13.82],
+            [18, 14.91],
+            [20, 16]
           ]
         },
-        "text-transform": "uppercase",
-        "visibility": "visible"
+        "text-font": ["Roboto Medium"],
+        "text-field": "{name:latin}",
+        "symbol-placement": "line",
+        "text-rotation-alignment": "map",
+        "visibility": "visible",
+        "text-letter-spacing": 0.01,
+        "text-pitch-alignment": "viewport"
       },
       "paint": {
-        "text-color": "#000",
-        "text-halo-color": "hsl(0, 0%, 100%)",
-        "text-halo-width": 2
+        "text-halo-blur": 0,
+        "text-color": "rgba(107, 107, 107, 1)",
+        "text-halo-width": 2,
+        "text-halo-color": "rgba(255, 255, 255, 1)"
       }
     },
     {
@@ -945,9 +976,9 @@
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "hsl(0, 0%, 25%)",
+        "text-color": "rgba(255, 255, 0, 1)",
         "text-halo-blur": 0,
-        "text-halo-color": "hsl(0, 0%, 100%)",
+        "text-halo-color": "rgba(0, 0, 0, 1)",
         "text-halo-width": 2
       }
     },
@@ -970,9 +1001,9 @@
         }
       },
       "paint": {
-        "text-color": "hsl(0, 0%, 0%)",
+        "text-color": "rgba(255, 255, 0, 1)",
         "text-halo-blur": 0,
-        "text-halo-color": "hsla(0, 0%, 100%, 0.75)",
+        "text-halo-color": "rgba(0, 0, 0, 1)",
         "text-halo-width": 2
       }
     },
@@ -996,9 +1027,9 @@
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "hsl(0, 0%, 13%)",
+        "text-color": "rgba(255, 255, 0, 1)",
         "text-halo-blur": 0,
-        "text-halo-color": "rgba(255,255,255,0.75)",
+        "text-halo-color": "rgba(0, 0, 0, 1)",
         "text-halo-width": 2
       }
     },
@@ -1022,10 +1053,56 @@
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "hsl(0, 0%, 13%)",
+        "text-color": "rgba(255, 255, 0, 1)",
         "text-halo-blur": 0,
-        "text-halo-color": "rgba(255,255,255,0.75)",
+        "text-halo-color": "rgba(0, 0, 0, 1)",
         "text-halo-width": 2
+      }
+    },
+    {
+      "id": "poi_custom",
+      "type": "symbol",
+      "source": "poi_custom",
+      "source-layer": "poi_custom",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "filter": ["all", ["!in", "maki", "campsite", "cemetery", "dog-park", "park", "golf", "swimming", "zoo"]],
+      "layout": {
+        "text-optional": true,
+        "text-line-height": 1.2,
+        "text-size": {
+          "stops": [
+            [16, 11],
+            [20, 13]
+          ]
+        },
+        "text-allow-overlap": false,
+        "icon-image": {
+          "stops": [
+            [14, "{maki}"],
+            [15, "{maki}"]
+          ]
+        },
+        "icon-rotation-alignment": "auto",
+        "text-ignore-placement": false,
+        "text-font": ["Roboto Regular"],
+        "icon-allow-overlap": false,
+        "text-padding": 1,
+        "visibility": "visible",
+        "text-offset": [0, 1],
+        "icon-optional": false,
+        "icon-size": 1.2,
+        "text-anchor": "top",
+        "text-field": "{name}",
+        "text-letter-spacing": 0.02,
+        "text-max-width": 8,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-blur": 0,
+        "text-color": "rgba(25, 118, 210, 1)",
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(255, 255, 255, 1)"
       }
     }
   ]

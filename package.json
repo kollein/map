@@ -19,6 +19,8 @@
   "homepage": "https://github.com/kollein/map#readme",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "@mapbox/vector-tile": "^2.0.4",
+    "express": "^5.1.0",
+    "pbf": "^4.0.1"
   }
 }
