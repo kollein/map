@@ -1,3 +1,4 @@
+import { getBoundingBoxByProvince } from '@/boundingBox'
 import { getKeywordMapping } from '@/keywordMapping'
 import { sendPlaceMessage } from '@/producer'
 import { PlaceMessage } from '@/type'
@@ -12,11 +13,16 @@ await fs.ensureDir('./src/output')
 // ===== CONFIG =====
 const keyword = process.argv[2]
 const province = process.argv[3]
+const provinceLatin = removeVietnameseTones(province)
+
 console.log('Keyword & Province:', keyword, province)
 const start = { lat: 9.2818974, lng: 105.7197254 } // Tiem Banh Huynh Minh Thanh
 
 // Bounding box tỉnh Bạc Liêu
-const bounds = { minLat: 8.993, maxLat: 9.55, minLng: 105.35, maxLng: 105.88 }
+const bounds = getBoundingBoxByProvince(provinceLatin)
+if (!bounds) {
+  throw new Error(`Bounding box not found for province: ${provinceLatin}`)
+}
 
 // Output files
 const outputFile = path.resolve(`./src/output/baclieu_${keyword}.json`)
@@ -73,7 +79,6 @@ async function safeSave() {
       }
 
       const { rank } = getKeywordMappingResult
-      const provinceLatin = removeVietnameseTones(province)
       const message: PlaceMessage = {
         name: item.name,
         lat: item.lat,
