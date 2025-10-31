@@ -6,7 +6,6 @@ type KeywordMappingResult = {
 
 export const keywordMapping: { [key: string]: KeywordMappingResult } = {
   shop: { class: 'amenity', subclass: 'shop', rank: 3 },
-  store: { class: 'amenity', subclass: 'shop', rank: 3 },
   'cửa-hàng': { class: 'amenity', subclass: 'shop', rank: 3 },
   'tiệm-bánh': { class: 'amenity', subclass: 'shop', rank: 3 },
   'tạp-hoá': { class: 'amenity', subclass: 'shop', rank: 3 },
@@ -16,6 +15,7 @@ export const keywordMapping: { [key: string]: KeywordMappingResult } = {
   'trà-sữa': { class: 'amenity', subclass: 'cafe', rank: 3 },
 
   restaurant: { class: 'amenity', subclass: 'restaurant', rank: 3 },
+  'nhà-hàng': { class: 'amenity', subclass: 'restaurant', rank: 3 },
   'quán-ăn': { class: 'amenity', subclass: 'restaurant', rank: 3 },
 
   hospital: { class: 'amenity', subclass: 'hospital', rank: 4 },
@@ -29,11 +29,8 @@ export const keywordMapping: { [key: string]: KeywordMappingResult } = {
   school: { class: 'amenity', subclass: 'school', rank: 4 },
   'trường-học': { class: 'amenity', subclass: 'school', rank: 4 },
 
-  church: { class: 'amenity', subclass: 'church', rank: 5 },
   'nhà-thờ': { class: 'amenity', subclass: 'church', rank: 5 },
 
-  pagoda: { class: 'amenity', subclass: 'pagoda', rank: 5 },
-  temple: { class: 'amenity', subclass: 'pagoda', rank: 5 },
   chùa: { class: 'amenity', subclass: 'pagoda', rank: 5 },
   miếu: { class: 'amenity', subclass: 'pagoda', rank: 5 },
 
@@ -49,4 +46,14 @@ export function getKeywordMapping(keyword: string): KeywordMappingResult | null 
 
 export function getKeywordsBySubclass(subclass: string): string[] {
   return Object.keys(keywordMapping).filter((key) => keywordMapping[key].subclass === subclass)
+}
+
+export function getAllSubclasses() {
+  const subclasses: string[] = []
+  Object.values(keywordMapping).forEach((mapping) => {
+    if (!subclasses.includes(mapping.subclass)) {
+      subclasses.push(mapping.subclass)
+    }
+  })
+  return subclasses
 }

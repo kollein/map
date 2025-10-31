@@ -16,3 +16,27 @@ export function removeVietnameseTones(str: string): string {
       .toLowerCase()
   )
 }
+
+export function getProvinceVietnameseName(provinceLatin: string) {
+  const mapping: { [key: string]: string } = {
+    angiang: 'An Giang',
+    baclieu: 'Bạc Liêu',
+    bentre: 'Bến Tre',
+    camau: 'Cà Mau',
+    cantho: 'Cần Thơ',
+    dongthap: 'Đồng Tháp',
+    hauchiang: 'Hậu Giang',
+    kiengiang: 'Kiên Giang',
+    longan: 'Long An',
+    soctrang: 'Sóc Trăng',
+    tiengiang: 'Tiền Giang',
+    travinh: 'Trà Vinh',
+    vinhlong: 'Vĩnh Long',
+  }
+  const province = mapping[provinceLatin]
+  if (province) {
+    return { provinceNoSpaces: province.replace(/(\s+)/g, '-'), province }
+  }
+
+  return null
+}

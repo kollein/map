@@ -1,9 +1,25 @@
+import { getAllSubclasses, getKeywordsBySubclass } from '@/keywordMapping'
+import { Province } from '@prisma/client'
 // @ts-ignore
 import { spawn } from 'bun'
-import { getKeywordsBySubclass } from '@/keywordMapping'
+import { getProvinceVietnameseName } from './utils'
 
-const keywords = getKeywordsBySubclass('cafe')
-const province = 'bạc-liêu'
+console.log(`🚀 Starting with subclass:${process.argv[2]} and province:${process.argv[3]}`)
+const subclass = process.argv[2]
+const province = process.argv[3]
+
+if (!subclass || !province) {
+  console.error('Usage: npm run start:crawler <subclass> <province>')
+  const subclasses = Object.values(getAllSubclasses()).join(', ')
+  const provinces = Object.keys(Province)
+    .map((p) => getProvinceVietnameseName(p)?.provinceNoSpaces)
+    .join(', ')
+  console.info('List of subclasses:\n', subclasses)
+  console.info('List of provinces:\n', provinces)
+  process.exit(1)
+}
+
+const keywords = getKeywordsBySubclass(subclass)
 
 // Maximum number of processes running concurrently
 const MAX_CONCURRENT = 10
