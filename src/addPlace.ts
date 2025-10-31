@@ -45,17 +45,21 @@ export async function addPlace(placeMessage: PlaceMessage) {
     return
   }
 
-  const { name_similarity, distance_m } = place
+  const { id, name_similarity, distance_m } = place
   if (name_similarity === 1 && distance_m === 0) return
 
   if (name_similarity >= THRESHOLD_SIMILARITY && distance_m === 0) {
-    await prisma.place.create({ data: { name, lat, lng, keyword, class: _class, subclass, rank, requireCheck: true } })
+    await prisma.place.create({
+      data: { name, lat, lng, keyword, class: _class, subclass, rank, requireCheck: true, checkWith: id },
+    })
     console.log(`✅ Saved: ${name} with requireCheck`)
     return
   }
 
   if (name_similarity === 1 && distance_m <= DISTANCE_LIMIT) {
-    await prisma.place.create({ data: { name, lat, lng, keyword, class: _class, subclass, rank, requireCheck: true } })
+    await prisma.place.create({
+      data: { name, lat, lng, keyword, class: _class, subclass, rank, requireCheck: true, checkWith: id },
+    })
     console.log(`✅ Saved: ${name} with requireCheck`)
     return
   }
