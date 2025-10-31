@@ -12,10 +12,11 @@ model Place {
   name         String
   lat          Float
   lng          Float
-  rank         Int           @default(3)
-  class        PlaceClass    @default(amenity)
-  subclass     PlaceSubClass @default(shop)
+  rank         Int
+  class        PlaceClass
+  subclass     PlaceSubClass
   keyword      String?
+  province     Province
   requireCheck Boolean       @default(false)
   checkWith    String? // id of the source to check with
   createdAt    DateTime      @default(now())
@@ -31,4 +32,20 @@ enum PlaceSubClass {
   restaurant
   cafe
   bar
+}
+
+enum Province {
+  angiang
+  baclieu
+  bentre
+  camau
+  cantho
+  dongthap
+  hauchiang
+  kiengiang
+  longan
+  soctrang
+  tiengiang
+  travinh
+  vinhlong
 }
