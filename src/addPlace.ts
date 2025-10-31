@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { PlaceMessage } from '@/type'
+import { PlaceMessage, SimilarPlace } from '@/type'
 
 const prisma = new PrismaClient()
 
@@ -7,7 +7,7 @@ const THRESHOLD_SIMILARITY = 0.8 // 80%
 const DISTANCE_LIMIT = 150 // 150m
 
 export async function getFirstMostSimilarPlace(name: string, lat: number, lng: number) {
-  const result: any = await prisma.$queryRaw`
+  const result: SimilarPlace[] = await prisma.$queryRaw`
   SELECT 
     id, 
     name, 

@@ -91,7 +91,7 @@ async function safeSave() {
         requireCheck: false,
       }
       await sendPlaceMessage(message)
-      console.log(`💾 Send place message to Kafka for keyword ${keyword}`)
+      console.log(`💾 Send place ${item.name} to Kafka for keyword ${keyword}`)
     } catch (err) {
       console.error(`⚠️ Failed to send Kafka message for ${item.name}:`, err)
     }

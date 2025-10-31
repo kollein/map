@@ -14,5 +14,4 @@ export async function sendPlaceMessage(place: PlaceMessage) {
     topic: 'place-topic',
     messages: [{ value: JSON.stringify(place) }],
   })
-  console.log(`📤 Sent: ${place.name}`)
 }
