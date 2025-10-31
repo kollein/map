@@ -211,6 +211,7 @@ async function crawlSpiral(browser: Browser) {
 
     const items = await getPageData(browser, keyword, lat, lng)
     let added = 0
+    results = [] // Clear previous results to save memory
     for (const item of items) {
       const id = keyOf(item.lat, item.lng)
       if (!visited.has(id) && inBounds(item.lat, item.lng)) {

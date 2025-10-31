@@ -36,7 +36,7 @@ async function runConsumer() {
           },
         ])
 
-        console.log(`✅ Acknowledged offset ${message.offset} (${place.name})`)
+        // console.log(`✅ Acknowledged offset ${message.offset} (${place.name})`)
       } catch (err) {
         console.error('❌ Error processing message:', err)
       }

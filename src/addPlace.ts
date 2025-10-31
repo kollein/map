@@ -37,8 +37,6 @@ export async function addPlace(placeMessage: PlaceMessage) {
   const { name, lat, lng, keyword, class: _class, subclass, rank, province } = placeMessage
 
   const place = await getFirstMostSimilarPlace(name, lat, lng)
-  console.log(`Place: ${name}`, place)
-
   if (!place) {
     await prisma.place.create({ data: { name, lat, lng, keyword, province, class: _class, subclass, rank } })
     console.log(`✅ Saved: ${name}`)
