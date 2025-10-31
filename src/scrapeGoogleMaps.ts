@@ -281,5 +281,6 @@ async function crawlSpiral(browser: Browser) {
     console.error('❌ Error:', err)
   } finally {
     await browser.close()
+    process.exit(0)
   }
 })()
