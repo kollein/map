@@ -8,15 +8,17 @@ datasource db {
 }
 
 model Place {
-  id        Int           @id @default(autoincrement())
-  name      String
-  lat       Float
-  lng       Float
-  rank      Int           @default(3)
-  class     PlaceClass    @default(amenity)
-  subclass  PlaceSubClass @default(shop)
-  keyword   String?
-  createdAt DateTime      @default(now())
+  id           Int           @id @default(autoincrement())
+  name         String
+  lat          Float
+  lng          Float
+  rank         Int           @default(3)
+  class        PlaceClass    @default(amenity)
+  subclass     PlaceSubClass @default(shop)
+  keyword      String?
+  requireCheck Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 enum PlaceClass {

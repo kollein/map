@@ -1,32 +1,6 @@
 version: "3.8"
 
 services:
-  postgis:
-    image: postgis/postgis:15-3.4
-    container_name: postgis
-    restart: always
-    environment:
-      POSTGRES_DB: gis
-      POSTGRES_USER: docker
-      POSTGRES_PASSWORD: docker
-    volumes:
-      - ./data:/data
-      - postgis_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  tileserver:
-    image: maptiler/tileserver-gl
-    container_name: tileserver
-    restart: always
-    volumes:
-      - ./data/vietnam.mbtiles:/data/vietnam.mbtiles
-      - ./styles:/styles
-    environment:
-      - TILESERVER_CONFIG=/styles/style.json
-    ports:
-      - "8080:8080"
-
   # osrm-builder:
   #   image: osrm/osrm-backend:latest
   #   container_name: osrm-builder
@@ -67,6 +41,41 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.8.0
+    container_name: zk
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka-broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      # bạn có thể mở 29092 nếu muốn listener nội bộ
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka-broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    driver: bridge
 
 volumes:
   postgis_data:

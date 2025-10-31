@@ -1,0 +1,22 @@
+# IDE / DEV
+.git/
+.idea/
+
+# 3rd Party Dependencies
+node_modules/
+
+# Other
+/.github
+/.googlesheet
+/coverage
+/credentials
+/devops
+/elastic
+/firebase
+/test
+/tools
+
+#  Enviroment / Log
+.env
+.env.*
+*.log

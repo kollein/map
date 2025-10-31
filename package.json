@@ -4,8 +4,27 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "start:tileserver": "nodemon --watch ./data/styles/ --ext json --exec \"npx tileserver-gl --config ./data/config.json\""
+    "start:tileserver": "nodemon --watch ./data/styles/ --ext json --exec \"npx tileserver-gl --config ./data/config.json\"",
+    "prettier": "prettier *.{ts,json,yml,md} ./**/*",
+    "format": "npm run prettier -- --write",
+    "lint": "npx eslint ./src",
+    "init:pubsub": "node --trace-deprecation --no-warnings --loader ./loader.js ./src/pubsub/init.ts",
+    "app:generate-keys": "node --trace-deprecation --no-warnings --loader ./loader.js ./scripts/getApps.ts",
+    "docs:preview": "npx @redocly/cli preview-docs ./src/rest/router/document/REST.yml",
+    "docs:bundle": "npx @redocly/cli bundle ./src/rest/router/document/REST.yml --output ./src/rest/router/document/bundle.json",
+    "dev:docs": "nodemon -w . -w .env -e ts,yml --exec 'npm run docs:bundle && node --trace-deprecation --no-warnings --loader ./loader.js src/main.ts'",
+    "dev": "nodemon -w . -w .env -e ts,json --trace-deprecation --no-warnings --loader ./loader.js src/main.ts",
+    "dev:inspect": "nodemon --inspect -w . -w .env -e ts,json --trace-deprecation --no-warnings --loader ./loader.js src/main.ts",
+    "start": "node --trace-deprecation --no-warnings --experimental-modules --experimental-specifier-resolution=node --loader ./loader.js dist/src/main.js",
+    "copy:tsconfig": "node tsconfig.js",
+    "build:tsc": "tsc",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "migrate:generate": "npx prisma migrate dev --create-only --name",
+    "build": "npm run copy:tsconfig -- build && npm run generate && npm run build:tsc && npm run copy:tsconfig -- dev",
+    "serve": "npm run start",
+    "dev:producer": "nodemon -w . -w .env -e ts,json --trace-deprecation --no-warnings --loader ./loader.js src/producer.ts",
+    "dev:consumer": "nodemon -w . -w .env -e ts,json --trace-deprecation --no-warnings --loader ./loader.js src/consumer.ts"
   },
   "repository": {
     "type": "git",
@@ -26,10 +45,18 @@
     "fs-extra": "^11.3.2",
     "pbf": "^4.0.1",
     "prisma": "^6.18.0",
-    "puppeteer": "^24.27.0"
+    "puppeteer": "^24.27.0",
+    "kafkajs": "^2.2.4",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.51.0",
+    "tsconfig-paths": "^4.2.0"
   },
   "type": "module"
 }
