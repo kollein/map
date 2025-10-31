@@ -7,18 +7,36 @@ const kafka = new Kafka({
   brokers: ['localhost:9092'],
 })
 
-const consumer = kafka.consumer({ groupId: 'place-group' })
+const topic = 'place-topic'
+const groupId = 'place-group'
+const consumer = kafka.consumer({ groupId })
 
 async function runConsumer() {
   await consumer.connect()
-  await consumer.subscribe({ topic: 'place-topic', fromBeginning: false })
+  await consumer.subscribe({ topic, fromBeginning: false })
 
   await consumer.run({
-    eachMessage: async ({ message }) => {
+    autoCommit: false, //
+    eachMessage: async ({ topic, partition, message }) => {
       try {
-        const place: PlaceMessage = JSON.parse(message.value!.toString())
+        const raw = message.value?.toString()
+        if (!raw) return
+
+        const place: PlaceMessage = JSON.parse(raw)
         console.log(`📥 Received: ${place.name}`)
+
         await addPlace(place)
+
+        // ✅ ACKNOWLEDGEMENT: Commit offset manually
+        await consumer.commitOffsets([
+          {
+            topic,
+            partition,
+            offset: (Number(message.offset) + 1).toString(),
+          },
+        ])
+
+        console.log(`✅ Acknowledged offset ${message.offset} (${place.name})`)
       } catch (err) {
         console.error('❌ Error processing message:', err)
       }

@@ -79,7 +79,7 @@ async function safeSave() {
         lng: item.lng,
         keyword,
         class: getKeywordMappingResult.class as PlaceClass,
-        subclass: getKeywordMappingResult.class as PlaceSubClass,
+        subclass: getKeywordMappingResult.subclass as PlaceSubClass,
         rank,
         requireCheck: false,
       }
