@@ -1,6 +1,6 @@
 import { spawn } from "bun";
 
-const keywords = ["Quán Chay"];
+const keywords = ["cafe", "restaurant", "church", "pagoda", "shop", "bakery"];
 
 for (const k of keywords) {
   const keyword = k.trim().toLowerCase().replace(/( +)/gi, "-");

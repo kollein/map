@@ -23,7 +23,7 @@ const MAX_SCROLL_ITER = 10;
 const SCROLL_DELAY_MIN = 1000;
 const SCROLL_DELAY_VAR = 400;
 const SAVE_THRESHOLD = 1;
-const ZOOM = 14;
+const ZOOM = 18;
 const JITTER_DEG = 0.001;
 
 // ===== STATE =====

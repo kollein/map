@@ -21,9 +21,11 @@
   "description": "",
   "dependencies": {
     "@mapbox/vector-tile": "^2.0.4",
+    "@prisma/client": "^6.18.0",
     "express": "^5.1.0",
     "fs-extra": "^11.3.2",
     "pbf": "^4.0.1",
+    "prisma": "^6.18.0",
     "puppeteer": "^24.27.0"
   },
   "devDependencies": {

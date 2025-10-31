@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Place {
+  id        Int           @id @default(autoincrement())
+  name      String
+  lat       Float
+  lng       Float
+  rank      Int           @default(3)
+  class     PlaceClass    @default(amenity)
+  subclass  PlaceSubClass @default(shop)
+  keyword   String?
+  createdAt DateTime      @default(now())
+}
+
+enum PlaceClass {
+  amenity
+}
+
+enum PlaceSubClass {
+  shop
+  restaurant
+  cafe
+  bar
+}
