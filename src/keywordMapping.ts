@@ -12,7 +12,7 @@ export const keywordMapping: { [key: string]: KeywordMappingResult } = {
   'tạp-hoá': { class: 'amenity', subclass: 'shop', rank: 3 },
 
   cafe: { class: 'amenity', subclass: 'cafe', rank: 3 },
-  'quán-café': { class: 'amenity', subclass: 'cafe', rank: 3 },
+  'quán-cà-phê': { class: 'amenity', subclass: 'cafe', rank: 3 },
 
   restaurant: { class: 'amenity', subclass: 'restaurant', rank: 3 },
   'quán-ăn': { class: 'amenity', subclass: 'restaurant', rank: 3 },

@@ -6,7 +6,7 @@ const keywords = getKeywordsBySubclass('cafe')
 const province = 'bạc-liêu'
 
 // Maximum number of processes running concurrently
-const MAX_CONCURRENT = 1
+const MAX_CONCURRENT = 10
 
 // Function to spawn a single keyword process, returns a Promise
 function spawnKeyword(keyword: string) {

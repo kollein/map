@@ -22,7 +22,7 @@ const outputFile = path.resolve(`./src/output/baclieu_${keyword}.json`)
 const stateFile = path.resolve(`./src/output/state_${keyword}.json`)
 
 // Crawl parameters
-const STEP_METERS = 50000
+const STEP_METERS = 3000
 const MAX_SCROLL_ITER = 1
 const SCROLL_DELAY_MIN = 1000
 const SCROLL_DELAY_VAR = 400
@@ -257,8 +257,6 @@ async function crawlSpiral(browser: Browser) {
       break
     }
   }
-
-  await safeSave()
 }
 
 // ===== MAIN =====
