@@ -34,13 +34,13 @@ export async function getFirstMostSimilarPlace(name: string, lat: number, lng: n
 }
 
 export async function addPlace(placeMessage: PlaceMessage) {
-  const { name, lat, lng, keyword, class: _class, subclass, rank } = placeMessage
+  const { name, lat, lng, keyword, class: _class, subclass, rank, province } = placeMessage
 
   const place = await getFirstMostSimilarPlace(name, lat, lng)
   console.log(`Place: ${name}`, place)
 
   if (!place) {
-    await prisma.place.create({ data: { name, lat, lng, keyword, class: _class, subclass, rank } })
+    await prisma.place.create({ data: { name, lat, lng, keyword, province, class: _class, subclass, rank } })
     console.log(`✅ Saved: ${name}`)
     return
   }
@@ -50,7 +50,7 @@ export async function addPlace(placeMessage: PlaceMessage) {
 
   if (name_similarity >= THRESHOLD_SIMILARITY && distance_m === 0) {
     await prisma.place.create({
-      data: { name, lat, lng, keyword, class: _class, subclass, rank, requireCheck: true, checkWith: id },
+      data: { name, lat, lng, keyword, province, class: _class, subclass, rank, requireCheck: true, checkWith: id },
     })
     console.log(`✅ Saved: ${name} with requireCheck`)
     return
@@ -58,7 +58,7 @@ export async function addPlace(placeMessage: PlaceMessage) {
 
   if (name_similarity === 1 && distance_m <= DISTANCE_LIMIT) {
     await prisma.place.create({
-      data: { name, lat, lng, keyword, class: _class, subclass, rank, requireCheck: true, checkWith: id },
+      data: { name, lat, lng, keyword, province, class: _class, subclass, rank, requireCheck: true, checkWith: id },
     })
     console.log(`✅ Saved: ${name} with requireCheck`)
     return

@@ -1,7 +1,8 @@
 import { getKeywordMapping } from '@/keywordMapping'
 import { sendPlaceMessage } from '@/producer'
 import { PlaceMessage } from '@/type'
-import { PlaceClass, PlaceSubClass } from '@prisma/client'
+import { removeVietnameseTones } from '@/utils'
+import { PlaceClass, PlaceSubClass, Province } from '@prisma/client'
 import fs from 'fs-extra'
 import path from 'path'
 import puppeteer, { Browser } from 'puppeteer'
@@ -72,12 +73,13 @@ async function safeSave() {
       }
 
       const { rank } = getKeywordMappingResult
-
+      const provinceLatin = removeVietnameseTones(province)
       const message: PlaceMessage = {
         name: item.name,
         lat: item.lat,
         lng: item.lng,
         keyword,
+        province: provinceLatin as Province,
         class: getKeywordMappingResult.class as PlaceClass,
         subclass: getKeywordMappingResult.subclass as PlaceSubClass,
         rank,

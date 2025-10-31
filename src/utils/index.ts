@@ -1,4 +1,4 @@
-function removeVietnameseTones(str: string): string {
+export function removeVietnameseTones(str: string): string {
   return (
     str
       // Chuẩn hóa Unicode để tách dấu ra khỏi ký tự
