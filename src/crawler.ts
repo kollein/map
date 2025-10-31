@@ -28,7 +28,7 @@ const MAX_CONCURRENT = 10
 function spawnKeyword(keyword: string) {
   return new Promise<void>((resolve, reject) => {
     const proc = spawn({
-      cmd: ['bun', './src/scrapeGoogleMaps.ts', keyword, province],
+      cmd: ['bun', './src/scrapeGoogleMaps.ts', keyword, province, subclass],
       stdout: 'inherit',
       stderr: 'inherit',
     })

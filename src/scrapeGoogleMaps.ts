@@ -4,18 +4,20 @@ import { sendPlaceMessage } from '@/producer'
 import { PlaceMessage } from '@/type'
 import { removeVietnameseTones } from '@/utils'
 import { PlaceClass, PlaceSubClass, Province } from '@prisma/client'
+import chalk from 'chalk'
 import fs from 'fs-extra'
 import path from 'path'
 import puppeteer, { Browser } from 'puppeteer'
 
-await fs.ensureDir('./src/output')
-
 // ===== CONFIG =====
 const keyword = process.argv[2]
 const province = process.argv[3]
+const subclass = process.argv[4]
 const provinceLatin = removeVietnameseTones(province)
+const folderPath = `./src/output/${provinceLatin}/${subclass}`
+await fs.ensureDir(folderPath)
 
-console.log('Keyword & Province:', keyword, province)
+console.log(chalk.blue.bold('Keyword & Province:', keyword, province))
 const start = { lat: 9.2818974, lng: 105.7197254 } // Tiem Banh Huynh Minh Thanh
 
 // Bounding box tỉnh Bạc Liêu
@@ -25,12 +27,12 @@ if (!bounds) {
 }
 
 // Output files
-const outputFile = path.resolve(`./src/output/baclieu_${keyword}.json`)
-const stateFile = path.resolve(`./src/output/state_${keyword}.json`)
+// const outputFile = path.resolve(`${folderPath}/${keyword}.json`)
+const stateFile = path.resolve(`${folderPath}/state_${keyword}.json`)
 
 // Crawl parameters
 const STEP_METERS = 3000
-const MAX_SCROLL_ITER = 6
+const MAX_SCROLL_ITER = 20
 const MIN_SCROLL_ITER = 1
 const SCROLL_DELAY_MIN = 1000
 const SCROLL_DELAY_VAR = 400
@@ -92,7 +94,7 @@ async function safeSave() {
         requireCheck: false,
       }
       await sendPlaceMessage(message)
-      console.log(`💾 Send place ${item.name} to Kafka for keyword ${keyword}`)
+      console.log(`✈️ Send place ${item.name} to Kafka for keyword ${keyword}`)
     } catch (err) {
       console.error(`⚠️ Failed to send Kafka message for ${item.name}:`, err)
     }
@@ -253,9 +255,8 @@ async function crawlSpiral(browser: Browser) {
     lastDistance = haversine(start.lat, start.lng, nextLat, nextLng)
     const dirEmoji = ['➡️', '⬇️', '⬅️', '⬆️'][newDirection]
     console.log(
-      `↪️ Move ${dirEmoji} (${nextLat.toFixed(5)}, ${nextLng.toFixed(
-        5
-      )}) for keyword ${keyword} ~ ${lastDistance.toFixed(2)} km from center`
+      `↪️ Move ${dirEmoji} (${nextLat.toFixed(5)}, ${nextLng.toFixed(5)}) for keyword ${keyword} ~`,
+      chalk.bgHex('#22ff00ff').bold.white(`${lastDistance.toFixed(2)} km from center`)
     )
 
     // Save new state
