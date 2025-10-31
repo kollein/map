@@ -52,6 +52,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       - kafka-net
+    volumes:
+      - ./zookeeper-data:/confluentinc/zookeeper
 
   kafka:
     image: confluentinc/cp-kafka:7.8.0
@@ -72,6 +74,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     networks:
       - kafka-net
+    volumes:
+      - ./kafka-data:/confluentinc/kafka
 
 networks:
   kafka-net:

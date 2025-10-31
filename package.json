@@ -23,8 +23,8 @@
     "migrate:generate": "npx prisma migrate dev --create-only --name",
     "build": "npm run copy:tsconfig -- build && npm run generate && npm run build:tsc && npm run copy:tsconfig -- dev",
     "serve": "npm run start",
-    "dev:producer": "nodemon -w . -w .env -e ts,json --trace-deprecation --no-warnings --loader ./loader.js src/producer.ts",
-    "dev:consumer": "nodemon -w . -w .env -e ts,json --trace-deprecation --no-warnings --loader ./loader.js src/consumer.ts"
+    "start:crawler": "bun run src/crawler.ts",
+    "dev:consumer": "nodemon -w . -w .env -e ts --trace-deprecation --no-warnings --loader ./loader.js src/consumer.ts"
   },
   "repository": {
     "type": "git",
@@ -50,6 +50,7 @@
     "puppeteer": "^24.27.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "eslint": "^8.51.0",

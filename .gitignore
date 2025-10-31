@@ -9,4 +9,5 @@ data/tiles_*
 crawler/tiles_*
 venv/
 resources/
-google-map-crawler/output/
+src/output/
+kafka-data/
