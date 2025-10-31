@@ -20,7 +20,7 @@ function spawnKeyword(keyword: string) {
     proc.exited.then((code: number) => {
       if (code === 0) {
         resolve()
-        console.log('✅ Done')
+        console.log('✅ Done:', keyword)
       } else {
         console.error('❌ Error with exit code', code)
         reject(new Error(`Exit code ${code}`))
@@ -39,7 +39,6 @@ async function runKeywords(keywords: string[]) {
     while (queue.length > 0 && active.length < MAX_CONCURRENT) {
       const k = queue.shift()!
       const keyword = k.trim().toLowerCase().replace(/( +)/gi, '-')
-      console.log('⚽ ~ runKeywords ~ keyword:', keyword)
       const p = spawnKeyword(keyword)
       active.push(p)
 
@@ -52,8 +51,6 @@ async function runKeywords(keywords: string[]) {
 
     // Wait for at least one process to finish before continuing
     if (active.length > 0) {
-      console.log('race done')
-
       await Promise.race(active)
     }
   }

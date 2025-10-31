@@ -34,7 +34,7 @@ const MAX_SCROLL_ITER = 1
 const SCROLL_DELAY_MIN = 1000
 const SCROLL_DELAY_VAR = 400
 const SAVE_THRESHOLD = 1
-const ZOOM = 18
+const ZOOM = 21
 const JITTER_DEG = 0.001
 
 // ===== STATE =====
@@ -281,6 +281,7 @@ async function crawlSpiral(browser: Browser) {
     console.error('❌ Error:', err)
   } finally {
     await browser.close()
+    console.log('👋 Browser closed, exiting.')
     process.exit(0)
   }
 })()
