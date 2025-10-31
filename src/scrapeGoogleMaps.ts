@@ -30,7 +30,8 @@ const stateFile = path.resolve(`./src/output/state_${keyword}.json`)
 
 // Crawl parameters
 const STEP_METERS = 3000
-const MAX_SCROLL_ITER = 1
+const MAX_SCROLL_ITER = 6
+const MIN_SCROLL_ITER = 1
 const SCROLL_DELAY_MIN = 1000
 const SCROLL_DELAY_VAR = 400
 const SAVE_THRESHOLD = 1
@@ -40,7 +41,7 @@ const JITTER_DEG = 0.001
 // ===== STATE =====
 const visited = new Set<string>()
 let results: { name: string; lat: number; lng: number }[] = []
-
+let lastDistance = 0
 // ===== UTILS =====
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 const keyOf = (lat: number, lng: number) => `${lat.toFixed(5)},${lng.toFixed(5)}`
@@ -155,7 +156,8 @@ async function getPageData(browser: Browser, keyword: string, lat: number, lng: 
   // Scroll to load all results
   const feedSelector = 'div[role="feed"]'
   let prevCount = 0
-  for (let i = 0; i < MAX_SCROLL_ITER; i++) {
+  const scrollIterations = lastDistance < 10 ? MAX_SCROLL_ITER : MIN_SCROLL_ITER
+  for (let i = 0; i < scrollIterations; i++) {
     const count = await page.$$eval('.Nv2PK.THOPZb.CpccDe', (els: any) => els.length)
     if (count > prevCount) {
       prevCount = count
@@ -247,12 +249,12 @@ async function crawlSpiral(browser: Browser) {
         break
     }
 
-    const dist = haversine(start.lat, start.lng, nextLat, nextLng).toFixed(2)
+    lastDistance = haversine(start.lat, start.lng, nextLat, nextLng)
     const dirEmoji = ['➡️', '⬇️', '⬅️', '⬆️'][newDirection]
     console.log(
       `↪️ Move ${dirEmoji} (${nextLat.toFixed(5)}, ${nextLng.toFixed(
         5
-      )}) for keyword ${keyword} ~ ${dist} km from center`
+      )}) for keyword ${keyword} ~ ${lastDistance.toFixed(2)} km from center`
     )
 
     // Save new state
