@@ -905,7 +905,7 @@
         "text-ignore-placement": false,
         "text-font": ["Roboto Regular"],
         "text-padding": 1,
-        "visibility": "visible",
+        "visibility": "none",
         "text-offset": [0, 1],
         "text-anchor": "top",
         "text-field": "{name:latin}",
@@ -1082,56 +1082,10 @@
       }
     },
     {
-      "id": "poi_vinh",
+      "id": "places_baclieu",
       "type": "symbol",
       "source": "composite",
-      "source-layer": "poi_vinh",
-      "minzoom": 17,
-      "maxzoom": 24,
-      "filter": ["all", ["!in", "maki", "campsite", "cemetery", "dog-park", "park", "golf", "swimming", "zoo"]],
-      "layout": {
-        "text-optional": true,
-        "text-line-height": 1.2,
-        "text-size": {
-          "stops": [
-            [16, 11],
-            [20, 13]
-          ]
-        },
-        "text-allow-overlap": false,
-        "icon-image": {
-          "stops": [
-            [16, "{maki}"],
-            [20, "{maki}"]
-          ]
-        },
-        "icon-rotation-alignment": "auto",
-        "text-ignore-placement": false,
-        "text-font": ["Roboto Regular"],
-        "icon-allow-overlap": false,
-        "text-padding": 1,
-        "visibility": "visible",
-        "text-offset": [0, 1],
-        "icon-optional": false,
-        "icon-size": 1.0,
-        "text-anchor": "top",
-        "text-field": "{name}",
-        "text-letter-spacing": 0.02,
-        "text-max-width": 8,
-        "icon-ignore-placement": false
-      },
-      "paint": {
-        "text-halo-blur": 0,
-        "text-color": "rgba(25, 118, 210, 1)",
-        "text-halo-width": 1,
-        "text-halo-color": "rgba(255, 255, 255, 1)"
-      }
-    },
-    {
-      "id": "poi_custom",
-      "type": "symbol",
-      "source": "composite",
-      "source-layer": "poi_custom",
+      "source-layer": "places_baclieu",
       "minzoom": 14,
       "maxzoom": 24,
       "filter": ["all", ["!in", "maki", "zoo"]],
@@ -1147,8 +1101,8 @@
         "text-allow-overlap": false,
         "icon-image": {
           "stops": [
-            [14, "{maki}"],
-            [15, "{maki}"]
+            [14, "{subclass}"],
+            [15, "{subclass}"]
           ]
         },
         "icon-rotation-alignment": "auto",

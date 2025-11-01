@@ -75,7 +75,7 @@ SELECT * FROM metadata;
       "source-layer": "poi_custom",
       "minzoom": 14,
       "maxzoom": 24,
-      "filter": ["all", ["!in", "maki", "zoo"]],
+      "filter": ["all", ["!in", "subclass", "zoo"]],
       "layout": {
         "text-optional": true,
         "text-line-height": 1.2,
@@ -88,8 +88,8 @@ SELECT * FROM metadata;
         "text-allow-overlap": false,
         "icon-image": {
           "stops": [
-            [14, "{maki}"],
-            [15, "{maki}"]
+            [14, "{subclass}"],
+            [15, "{subclass}"]
           ]
         },
         "icon-rotation-alignment": "auto",
@@ -121,4 +121,12 @@ SELECT * FROM metadata;
 
 ```
 tile-join -o composite.mbtiles poi_custom.mbtiles poi_vinh.mbtiles --no-tile-size-limit
+```
+
+6. Check layer ids inside composite.mbtiles via sqlite3 then update tileservergl `config.json` and map `style.json`
+
+```
+sqlite3 composite.mbtiles
+
+SELECT json_extract(value, '$.vector_layers') FROM metadata WHERE name='json';
 ```
