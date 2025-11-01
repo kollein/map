@@ -31,7 +31,7 @@ export function highlightTextAdvanced(text: string, query: string): string {
     const matches = [...lowerNoAccentText.matchAll(fuzzy)]
 
     for (const match of matches) {
-      const matchedText = originalText.substr(match.index!, match[0].length)
+      const matchedText = originalText.substr(match.index - 1, match[0].length)
       const safeMatched = matchedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // escape regex
       const highlightRegex = new RegExp(safeMatched, 'g')
       highlighted = highlighted.replace(highlightRegex, `<em class="highlight">${matchedText}</em>`)
