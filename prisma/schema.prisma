@@ -28,10 +28,18 @@ enum PlaceClass {
 }
 
 enum PlaceSubClass {
-  shop
-  restaurant
-  cafe
   bar
+  building
+  cafe
+  church
+  company
+  hospital
+  hotel
+  marker
+  pagoda
+  restaurant
+  school
+  shop
 }
 
 enum Province {
