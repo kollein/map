@@ -24,7 +24,8 @@
     "build": "npm run copy:tsconfig -- build && npm run generate && npm run build:tsc && npm run copy:tsconfig -- dev",
     "serve": "npm run start",
     "start:crawler": "bun run src/crawler.ts",
-    "dev:consumer": "nodemon -w . -w .env -e ts --trace-deprecation --no-warnings --loader ./loader.js src/consumer.ts"
+    "dev:consumer": "nodemon -w . -w .env -e ts --trace-deprecation --no-warnings --loader ./loader.js src/consumer.ts",
+    "gen:sprite": "npx spritegen-png-cli --input data/styles/maptiler-basic/icons/ --out data/styles/maptiler-basic -n sprite@2x && npx spritegen-png-cli --input data/styles/maptiler-basic/icons/ --out data/styles/maptiler-basic"
   },
   "repository": {
     "type": "git",
@@ -57,6 +58,7 @@
     "@typescript-eslint/parser": "^6.7.4",
     "eslint": "^8.51.0",
     "nodemon": "^3.1.10",
+    "spritegen-png-cli": "^1.0.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"

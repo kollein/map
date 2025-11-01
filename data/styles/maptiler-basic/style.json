@@ -289,7 +289,7 @@
       "source-layer": "building",
       "paint": {
         "fill-antialias": true,
-        "fill-color": "rgba(255, 255, 255, 0)",
+        "fill-color": "rgba(236, 236, 236, 0.2)",
         "fill-opacity": {
           "base": 1,
           "stops": [
@@ -299,7 +299,7 @@
         },
         "fill-outline-color": {
           "stops": [
-            [15, "rgba(212, 177, 146, 0)"],
+            [15, "rgba(212, 177, 146, 0.2)"],
             [16, "rgba(212, 177, 146, 0.5)"]
           ]
         }
@@ -1090,6 +1090,7 @@
       "maxzoom": 24,
       "filter": ["all", ["!in", "maki", "zoo"]],
       "layout": {
+        "visibility": "visible",
         "text-optional": true,
         "text-line-height": 1.2,
         "text-size": {
@@ -1099,26 +1100,25 @@
           ]
         },
         "text-allow-overlap": false,
+        "text-ignore-placement": false,
+        "text-font": ["Roboto Regular"],
+        "text-padding": 1,
+        "text-offset": [0, 1],
+        "text-anchor": "top",
+        "text-field": "{name}",
+        "text-letter-spacing": 0.02,
+        "text-max-width": 8,
         "icon-image": {
           "stops": [
             [14, "{subclass}"],
             [15, "{subclass}"]
           ]
         },
-        "icon-rotation-alignment": "auto",
-        "text-ignore-placement": false,
-        "text-font": ["Roboto Regular"],
-        "icon-allow-overlap": false,
-        "text-padding": 1,
-        "visibility": "visible",
-        "text-offset": [0, 1],
         "icon-optional": false,
-        "icon-size": 1.2,
-        "text-anchor": "top",
-        "text-field": "{name}",
-        "text-letter-spacing": 0.02,
-        "text-max-width": 8,
-        "icon-ignore-placement": false
+        "icon-size": 0.6,
+        "icon-ignore-placement": false,
+        "icon-rotation-alignment": "auto",
+        "icon-allow-overlap": false
       },
       "paint": {
         "text-halo-blur": 0,

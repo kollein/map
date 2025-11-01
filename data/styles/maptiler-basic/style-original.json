@@ -12,7 +12,7 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "mbtiles://{openmaptiles}"
+      "url": "mbtiles://vietnam.mbtiles"
     }
   },
   "sprite": "{styleJsonFolder}/sprite",

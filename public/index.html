@@ -1,395 +1,412 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="utf-8" />
-    <title>Vietnam Routing Map</title>
-    <link href="./maplibre-gl.css" rel="stylesheet" />
-    <script src="./maplibre-gl.js"></script>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        height: 100vh;
-        font-family: system-ui, sans-serif;
-      }
-      #map {
-        flex: 3;
-        height: 100%;
-        position: relative;
-      }
-      #info {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        background: #f7f7f7;
-        border-left: 1px solid #ccc;
-      }
-      h3 {
-        margin-top: 0;
-      }
-      .step {
-        padding: 8px;
-        margin-bottom: 6px;
-        background: white;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .step:hover {
-        background: #e6f7ff;
-      }
-      #toggle-style-btn,
-      #gps-btn {
-        position: absolute;
-        right: 10px;
-        background: white;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        z-index: 999;
-      }
-      #toggle-style-btn {
-        top: 10px;
-      }
-      #gps-btn {
-        top: 50px;
-        background: #007bff;
-        color: white;
-      }
-      #search-box {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 999;
-        background: white;
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        padding: 8px;
-        width: 220px;
-      }
-      #search-input {
-        width: 100%;
-        padding: 6px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      #suggestions {
-        margin-top: 4px;
-        max-height: 150px;
-        overflow-y: auto;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        display: none;
-      }
-      .suggestion {
-        padding: 6px;
-        cursor: pointer;
-      }
-      .suggestion:hover {
-        background: #e6f7ff;
-      }
-      #currentRoad {
-        margin-top: 8px;
-        font-weight: 500;
-      }
-    </style>
-  </head>
 
-  <body>
-    <div id="map"></div>
+<head>
+  <meta charset="utf-8" />
+  <title>Vietnam Routing Map</title>
+  <link href="./maplibre-gl.css" rel="stylesheet" />
+  <script src="./maplibre-gl.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      font-family: system-ui, sans-serif;
+    }
 
-    <div id="info">
-      <div id="search-box">
-        <input id="search-input" placeholder="🔍 Tìm địa điểm..." value="bun bo cay anh nguyet" />
-        <div id="suggestions"></div>
-      </div>
-      <button id="toggle-style-btn">Đổi kiểu bản đồ</button>
-      <button id="gps-btn">🚗 GPS Follow</button>
-      <h3>Hướng đi chi tiết</h3>
-      <div id="directions"></div>
-      <div id="currentRoad"></div>
-      <p><b>Hướng dẫn:</b><br />Click chọn <b>điểm bắt đầu</b> → <b>điểm đến</b></p>
+    #map {
+      flex: 3;
+      height: 100%;
+      position: relative;
+    }
+
+    #info {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background: #f7f7f7;
+      border-left: 1px solid #ccc;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    .step {
+      padding: 8px;
+      margin-bottom: 6px;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .step:hover {
+      background: #e6f7ff;
+    }
+
+    #toggle-style-btn,
+    #gps-btn {
+      position: absolute;
+      right: 10px;
+      background: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    #toggle-style-btn {
+      top: 10px;
+    }
+
+    #gps-btn {
+      top: 50px;
+      background: #007bff;
+      color: white;
+    }
+
+    #search-box {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 999;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      padding: 8px;
+      width: 220px;
+    }
+
+    #search-input {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #suggestions {
+      margin-top: 4px;
+      max-height: 150px;
+      overflow-y: auto;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .suggestion {
+      padding: 6px;
+      cursor: pointer;
+    }
+
+    .suggestion:hover {
+      background: #e6f7ff;
+    }
+
+    #currentRoad {
+      margin-top: 8px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div id="info">
+    <div id="search-box">
+      <input id="search-input" placeholder="🔍 Tìm địa điểm..." value="bun bo cay anh nguyet" />
+      <div id="suggestions"></div>
     </div>
+    <button id="toggle-style-btn">Đổi kiểu bản đồ</button>
+    <button id="gps-btn">🚗 GPS Follow</button>
+    <h3>Hướng đi chi tiết</h3>
+    <div id="directions"></div>
+    <div id="currentRoad"></div>
+    <p><b>Hướng dẫn:</b><br />Click chọn <b>điểm bắt đầu</b> → <b>điểm đến</b></p>
+  </div>
 
-    <script>
-      // ======== Cấu hình bản đồ ========
-      const styles = {
-        // street: "https://api.maptiler.com/maps/019a1f4a-6740-728b-bfa1-0f978746eba7/style.json?key=P6QaWC41SOB6NaqDUCk2&mtsid=02f3288c-3462-47d9-a75b-7b901e20448b",
-        // street: "http://localhost:8080/styles/streets-simple/style.json",
-        // street: "http://localhost:8080/styles/streets-v4/style.json",
-        // street: "http://localhost:8080/styles/osm-bright/style.json",
-        street: "http://localhost:8080/styles/maptiler-basic/style.json",
-        dark: "https://demotiles.maplibre.org/style.json",
-        satellite: "https://api.maptiler.com/maps/hybrid/style.json?key=YOUR_MAPTILER_KEY",
-      };
-      let currentStyle = "street";
+  <script>
+    // ======== Cấu hình bản đồ ========
+    const styles = {
+      // street: "https://api.maptiler.com/maps/019a1f4a-6740-728b-bfa1-0f978746eba7/style.json?key=P6QaWC41SOB6NaqDUCk2&mtsid=02f3288c-3462-47d9-a75b-7b901e20448b",
+      // street: "http://localhost:8080/styles/streets-simple/style.json",
+      // street: "http://localhost:8080/styles/streets-v4/style.json",
+      // street: "http://localhost:8080/styles/osm-bright/style.json",
+      street: "http://localhost:8080/styles/maptiler-basic/style.json",
+      dark: "https://demotiles.maplibre.org/style.json",
+      satellite: "https://api.maptiler.com/maps/hybrid/style.json?key=YOUR_MAPTILER_KEY",
+    };
+    let currentStyle = "street";
 
-      const map = new maplibregl.Map({
-        container: "map",
-        style: styles.street,
-        // center: [106.7009, 10.7765], // HCM
-        // center: [105.724, 9.2941], // Trung tâm TP. Bạc Liêu
-        // center: [105.7270863, 9.2805343], // Bun bo cay anh nguyet
-        center: [105.7197254, 9.2818974], // Tiem banh huynh minh thanh
-        // center: [105.72108149528503, 9.285892919823096], // Nha thuoc an khang
-        zoom: 16,
-        minZoom: 4,
-        maxZoom: 20,
+    const map = new maplibregl.Map({
+      container: "map",
+      style: styles.street,
+      // center: [106.7009, 10.7765], // HCM
+      // center: [105.724, 9.2941], // Trung tâm TP. Bạc Liêu
+      // center: [105.7270863, 9.2805343], // Bun bo cay anh nguyet
+      center: [105.7255071401596, 9.283240555724475], // Tiem banh huynh minh thanh
+      // center: [105.72108149528503, 9.285892919823096], // Nha thuoc an khang
+      zoom: 16,
+      minZoom: 4,
+      maxZoom: 20,
+    });
+    map.addControl(new maplibregl.NavigationControl());
+
+    // ======== Biến lưu điểm ========
+    let start = null;
+    let end = null;
+    let startMarker, endMarker;
+    let routeCoords = [];
+    let stepsData = [];
+
+    // ======== Click để chọn điểm ========
+    // map.on("click", (e) => {
+    //   if (!start) {
+    //     start = [e.lngLat.lng, e.lngLat.lat];
+    //     startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
+    //   } else if (!end) {
+    //     end = [e.lngLat.lng, e.lngLat.lat];
+    //     endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
+    //     getRoute(start, end);
+    //   } else {
+    //     // Reset
+    //     start = end = null;
+    //     if (startMarker) startMarker.remove();
+    //     if (endMarker) endMarker.remove();
+    //     if (map.getLayer("route")) map.removeLayer("route");
+    //     if (map.getSource("route")) map.removeSource("route");
+    //     document.getElementById("directions").innerHTML = "";
+    //     document.getElementById("currentRoad").innerText = "";
+    //   }
+    // });
+
+    // ======== Lấy tuyến đường từ OSRM ========
+    async function getRoute(start, end) {
+      // const url = `http://192.168.1.6:3000/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
+      const url = `http://localhost:3000/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const route = data.routes[0];
+      routeCoords = route.geometry.coordinates.map((c) => ({
+        lng: c[0],
+        lat: c[1],
+      }));
+      stepsData = route.legs[0].steps;
+
+      drawRoute(route.geometry);
+      fitToRoute(route.geometry);
+      showSteps(stepsData);
+    }
+
+    function drawRoute(geometry) {
+      if (map.getSource("route")) {
+        map.getSource("route").setData(geometry);
+      } else {
+        map.addSource("route", { type: "geojson", data: geometry });
+        map.addLayer({
+          id: "route",
+          type: "line",
+          source: "route",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: { "line-color": "#007bff", "line-width": 5 },
+        });
+      }
+    }
+
+    function fitToRoute(geometry) {
+      const bounds = new maplibregl.LngLatBounds();
+      geometry.coordinates.forEach((c) => bounds.extend(c));
+      map.fitBounds(bounds, { padding: 60 });
+    }
+
+    // ======== Hướng đi chi tiết ========
+    function showSteps(steps) {
+      const container = document.getElementById("directions");
+      container.innerHTML = "";
+      steps.forEach((s, i) => {
+        const div = document.createElement("div");
+        const instruction = s.maneuver?.instruction || `Đi tiếp trên ${s.name}`;
+        div.className = "step";
+        div.textContent = `B${i + 1}: ${instruction}`;
+        div.onmouseenter = () => highlightSegment(s.geometry);
+        div.onmouseleave = removeHighlight;
+        div.onclick = () => speakInstruction(instruction);
+        container.appendChild(div);
       });
-      map.addControl(new maplibregl.NavigationControl());
+    }
 
-      // ======== Biến lưu điểm ========
-      let start = null;
-      let end = null;
-      let startMarker, endMarker;
-      let routeCoords = [];
-      let stepsData = [];
+    function highlightSegment(geometry) {
+      if (!geometry) return;
+      if (map.getSource("highlight")) {
+        map.getSource("highlight").setData(geometry);
+      } else {
+        map.addSource("highlight", { type: "geojson", data: geometry });
+        map.addLayer({
+          id: "highlight",
+          type: "line",
+          source: "highlight",
+          paint: { "line-color": "#ff0000", "line-width": 7 },
+        });
+      }
+    }
 
-      // ======== Click để chọn điểm ========
-      // map.on("click", (e) => {
-      //   if (!start) {
-      //     start = [e.lngLat.lng, e.lngLat.lat];
-      //     startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
-      //   } else if (!end) {
-      //     end = [e.lngLat.lng, e.lngLat.lat];
-      //     endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
-      //     getRoute(start, end);
-      //   } else {
-      //     // Reset
-      //     start = end = null;
-      //     if (startMarker) startMarker.remove();
-      //     if (endMarker) endMarker.remove();
-      //     if (map.getLayer("route")) map.removeLayer("route");
-      //     if (map.getSource("route")) map.removeSource("route");
-      //     document.getElementById("directions").innerHTML = "";
-      //     document.getElementById("currentRoad").innerText = "";
-      //   }
-      // });
+    function removeHighlight() {
+      if (map.getLayer("highlight")) map.removeLayer("highlight");
+      if (map.getSource("highlight")) map.removeSource("highlight");
+    }
 
-      // ======== Lấy tuyến đường từ OSRM ========
-      async function getRoute(start, end) {
-        // const url = `http://192.168.1.6:3000/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
-        const url = `http://localhost:3000/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=full&geometries=geojson&steps=true`;
+    function speakInstruction(text) {
+      if (!text) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "vi-VN";
+      speechSynthesis.speak(utter);
+    }
+
+    // ======== GPS mô phỏng ========
+    let followMode = false;
+    let marker = null;
+    let animationId = null;
+
+    function startFollow() {
+      if (!routeCoords.length) return alert("Hãy chọn tuyến đường trước!");
+      if (marker) marker.remove();
+
+      let i = 0;
+      marker = new maplibregl.Marker({ color: "orange" }).setLngLat(routeCoords[0]).addTo(map);
+      followMode = true;
+
+      function animate() {
+        if (!followMode) return;
+        const current = routeCoords[i];
+        if (!current) return;
+
+        marker.setLngLat(current);
+        map.easeTo({ center: current, zoom: 15, duration: 800 });
+
+        const nearestStep = stepsData.find((s) =>
+          s.geometry.coordinates.some(
+            (c) => Math.abs(c[0] - current.lng) < 0.0005 && Math.abs(c[1] - current.lat) < 0.0005
+          )
+        );
+        if (nearestStep) {
+          const name = nearestStep.name || "Đường không xác định";
+          document.getElementById("currentRoad").innerText = `🚗 Đang đi trên: ${name}`;
+        }
+
+        i++;
+        if (i < routeCoords.length) {
+          animationId = requestAnimationFrame(animate);
+        } else {
+          followMode = false;
+          cancelAnimationFrame(animationId);
+          alert("Đã đến đích!");
+        }
+      }
+      animate();
+    }
+
+    function stopFollow() {
+      followMode = false;
+      cancelAnimationFrame(animationId);
+      if (marker) marker.remove();
+    }
+
+    document.getElementById("gps-btn").onclick = () => {
+      if (followMode) {
+        stopFollow();
+        document.getElementById("gps-btn").textContent = "🚗 GPS Follow";
+      } else {
+        startFollow();
+        document.getElementById("gps-btn").textContent = "⏹ Dừng GPS";
+      }
+    };
+
+    // ======== Đổi kiểu bản đồ ========
+    document.getElementById("toggle-style-btn").onclick = () => {
+      if (currentStyle === "street") currentStyle = "dark";
+      else if (currentStyle === "dark") currentStyle = "satellite";
+      else currentStyle = "street";
+      map.setStyle(styles[currentStyle]);
+
+      map.once("styledata", () => {
+        if (start) startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
+        if (end) endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
+        if (routeCoords.length) {
+          const geojson = {
+            type: "LineString",
+            coordinates: routeCoords.map((c) => [c.lng, c.lat]),
+          };
+          drawRoute(geojson);
+        }
+      });
+    };
+
+    // ======== 🔍 Tìm kiếm địa điểm (Nominatim) ========
+    const input = document.getElementById("search-input");
+    const suggestions = document.getElementById("suggestions");
+    let searchTimeout = null;
+
+    input.addEventListener("input", () => {
+      clearTimeout(searchTimeout);
+      const query = input.value.trim();
+      if (query.length < 2) {
+        suggestions.style.display = "none";
+        return;
+      }
+      searchTimeout = setTimeout(async () => {
+        const url = `https://nominatim.openstreetmap.org/search?polygon_geojson=1&accept-language=vi&format=jsonv2&q=${encodeURIComponent(
+          query
+        )}`;
         const res = await fetch(url);
         const data = await res.json();
-        const route = data.routes[0];
-        routeCoords = route.geometry.coordinates.map((c) => ({
-          lng: c[0],
-          lat: c[1],
-        }));
-        stepsData = route.legs[0].steps;
+        showSuggestions(data);
+      }, 300);
+    });
 
-        drawRoute(route.geometry);
-        fitToRoute(route.geometry);
-        showSteps(stepsData);
+    function showSuggestions(results) {
+      suggestions.innerHTML = "";
+      if (!results.length) {
+        suggestions.style.display = "none";
+        return;
       }
-
-      function drawRoute(geometry) {
-        if (map.getSource("route")) {
-          map.getSource("route").setData(geometry);
-        } else {
-          map.addSource("route", { type: "geojson", data: geometry });
-          map.addLayer({
-            id: "route",
-            type: "line",
-            source: "route",
-            layout: { "line-join": "round", "line-cap": "round" },
-            paint: { "line-color": "#007bff", "line-width": 5 },
-          });
-        }
-      }
-
-      function fitToRoute(geometry) {
-        const bounds = new maplibregl.LngLatBounds();
-        geometry.coordinates.forEach((c) => bounds.extend(c));
-        map.fitBounds(bounds, { padding: 60 });
-      }
-
-      // ======== Hướng đi chi tiết ========
-      function showSteps(steps) {
-        const container = document.getElementById("directions");
-        container.innerHTML = "";
-        steps.forEach((s, i) => {
-          const div = document.createElement("div");
-          const instruction = s.maneuver?.instruction || `Đi tiếp trên ${s.name}`;
-          div.className = "step";
-          div.textContent = `B${i + 1}: ${instruction}`;
-          div.onmouseenter = () => highlightSegment(s.geometry);
-          div.onmouseleave = removeHighlight;
-          div.onclick = () => speakInstruction(instruction);
-          container.appendChild(div);
-        });
-      }
-
-      function highlightSegment(geometry) {
-        if (!geometry) return;
-        if (map.getSource("highlight")) {
-          map.getSource("highlight").setData(geometry);
-        } else {
-          map.addSource("highlight", { type: "geojson", data: geometry });
-          map.addLayer({
-            id: "highlight",
-            type: "line",
-            source: "highlight",
-            paint: { "line-color": "#ff0000", "line-width": 7 },
-          });
-        }
-      }
-
-      function removeHighlight() {
-        if (map.getLayer("highlight")) map.removeLayer("highlight");
-        if (map.getSource("highlight")) map.removeSource("highlight");
-      }
-
-      function speakInstruction(text) {
-        if (!text) return;
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "vi-VN";
-        speechSynthesis.speak(utter);
-      }
-
-      // ======== GPS mô phỏng ========
-      let followMode = false;
-      let marker = null;
-      let animationId = null;
-
-      function startFollow() {
-        if (!routeCoords.length) return alert("Hãy chọn tuyến đường trước!");
-        if (marker) marker.remove();
-
-        let i = 0;
-        marker = new maplibregl.Marker({ color: "orange" }).setLngLat(routeCoords[0]).addTo(map);
-        followMode = true;
-
-        function animate() {
-          if (!followMode) return;
-          const current = routeCoords[i];
-          if (!current) return;
-
-          marker.setLngLat(current);
-          map.easeTo({ center: current, zoom: 15, duration: 800 });
-
-          const nearestStep = stepsData.find((s) =>
-            s.geometry.coordinates.some(
-              (c) => Math.abs(c[0] - current.lng) < 0.0005 && Math.abs(c[1] - current.lat) < 0.0005
-            )
-          );
-          if (nearestStep) {
-            const name = nearestStep.name || "Đường không xác định";
-            document.getElementById("currentRoad").innerText = `🚗 Đang đi trên: ${name}`;
-          }
-
-          i++;
-          if (i < routeCoords.length) {
-            animationId = requestAnimationFrame(animate);
-          } else {
-            followMode = false;
-            cancelAnimationFrame(animationId);
-            alert("Đã đến đích!");
-          }
-        }
-        animate();
-      }
-
-      function stopFollow() {
-        followMode = false;
-        cancelAnimationFrame(animationId);
-        if (marker) marker.remove();
-      }
-
-      document.getElementById("gps-btn").onclick = () => {
-        if (followMode) {
-          stopFollow();
-          document.getElementById("gps-btn").textContent = "🚗 GPS Follow";
-        } else {
-          startFollow();
-          document.getElementById("gps-btn").textContent = "⏹ Dừng GPS";
-        }
-      };
-
-      // ======== Đổi kiểu bản đồ ========
-      document.getElementById("toggle-style-btn").onclick = () => {
-        if (currentStyle === "street") currentStyle = "dark";
-        else if (currentStyle === "dark") currentStyle = "satellite";
-        else currentStyle = "street";
-        map.setStyle(styles[currentStyle]);
-
-        map.once("styledata", () => {
-          if (start) startMarker = new maplibregl.Marker({ color: "green" }).setLngLat(start).addTo(map);
-          if (end) endMarker = new maplibregl.Marker({ color: "red" }).setLngLat(end).addTo(map);
-          if (routeCoords.length) {
-            const geojson = {
-              type: "LineString",
-              coordinates: routeCoords.map((c) => [c.lng, c.lat]),
-            };
-            drawRoute(geojson);
-          }
-        });
-      };
-
-      // ======== 🔍 Tìm kiếm địa điểm (Nominatim) ========
-      const input = document.getElementById("search-input");
-      const suggestions = document.getElementById("suggestions");
-      let searchTimeout = null;
-
-      input.addEventListener("input", () => {
-        clearTimeout(searchTimeout);
-        const query = input.value.trim();
-        if (query.length < 2) {
+      results.forEach((r) => {
+        const div = document.createElement("div");
+        div.className = "suggestion";
+        div.textContent = r.display_name;
+        div.onclick = () => {
+          map.flyTo({ center: [r.lon, r.lat], zoom: 14 });
+          new maplibregl.Marker().setLngLat([r.lon, r.lat]).addTo(map);
+          input.value = r.display_name;
           suggestions.style.display = "none";
-          return;
-        }
-        searchTimeout = setTimeout(async () => {
-          const url = `https://nominatim.openstreetmap.org/search?polygon_geojson=1&accept-language=vi&format=jsonv2&q=${encodeURIComponent(
-            query
-          )}`;
-          const res = await fetch(url);
-          const data = await res.json();
-          showSuggestions(data);
-        }, 300);
+        };
+        suggestions.appendChild(div);
       });
+      suggestions.style.display = "block";
+    }
 
-      function showSuggestions(results) {
-        suggestions.innerHTML = "";
-        if (!results.length) {
-          suggestions.style.display = "none";
-          return;
-        }
-        results.forEach((r) => {
-          const div = document.createElement("div");
-          div.className = "suggestion";
-          div.textContent = r.display_name;
-          div.onclick = () => {
-            map.flyTo({ center: [r.lon, r.lat], zoom: 14 });
-            new maplibregl.Marker().setLngLat([r.lon, r.lat]).addTo(map);
-            input.value = r.display_name;
-            suggestions.style.display = "none";
-          };
-          suggestions.appendChild(div);
+    map.on("click", (e) => {
+      const zoom = map.getZoom(); // Lấy zoom hiện tại
+      console.log("Current zoom:", zoom.toFixed(2)); // in ra 2 chữ số thập phân
+
+      // e.point is the pixel coordinate of the click
+      const features = map.queryRenderedFeatures(e.point);
+
+      if (features.length) {
+        features.forEach((feature) => {
+          console.log("Layer ID:", feature.layer.id);
+          console.log("Feature properties:", feature.properties);
+          console.log("Feature geometry:", feature.geometry);
         });
-        suggestions.style.display = "block";
+      } else {
+        console.log("No features here");
       }
+    });
+  </script>
+</body>
 
-      map.on("click", (e) => {
-        const zoom = map.getZoom(); // Lấy zoom hiện tại
-        console.log("Current zoom:", zoom.toFixed(2)); // in ra 2 chữ số thập phân
-
-        // e.point is the pixel coordinate of the click
-        const features = map.queryRenderedFeatures(e.point);
-
-        if (features.length) {
-          features.forEach((feature) => {
-            console.log("Layer ID:", feature.layer.id);
-            console.log("Feature properties:", feature.properties);
-          });
-        } else {
-          console.log("No features here");
-        }
-      });
-    </script>
-  </body>
 </html>
