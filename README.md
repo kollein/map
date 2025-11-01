@@ -45,8 +45,8 @@ SELECT * FROM metadata;
     "vietnam": {
       "mbtiles": "vietnam.mbtiles"
     },
-    "poi_custom": {
-      "mbtiles": "poi_custom.mbtiles"
+    "composite": {
+      "mbtiles": "composite.mbtiles"
     }
   }
 }
@@ -61,24 +61,57 @@ SELECT * FROM metadata;
       "type": "vector",
       "url": "mbtiles://vietnam"
     },
-    "poi_custom": {
+    "composite": {
       "type": "vector",
-      "url": "mbtiles://poi_custom"
+      "url": "mbtiles://composite"
     }
   },
   "layers": [
+    ...,
     {
       "id": "poi_custom",
       "type": "symbol",
-      "source": "poi_custom",
+      "source": "composite",
       "source-layer": "poi_custom",
+      "minzoom": 14,
+      "maxzoom": 24,
+      "filter": ["all", ["!in", "maki", "zoo"]],
       "layout": {
-        "icon-image": "marker-15",
-        "icon-size": 1,
+        "text-optional": true,
+        "text-line-height": 1.2,
+        "text-size": {
+          "stops": [
+            [16, 11],
+            [20, 13]
+          ]
+        },
+        "text-allow-overlap": false,
+        "icon-image": {
+          "stops": [
+            [14, "{maki}"],
+            [15, "{maki}"]
+          ]
+        },
+        "icon-rotation-alignment": "auto",
+        "text-ignore-placement": false,
+        "text-font": ["Roboto Regular"],
+        "icon-allow-overlap": false,
+        "text-padding": 1,
+        "visibility": "visible",
+        "text-offset": [0, 1],
+        "icon-optional": false,
+        "icon-size": 1.2,
+        "text-anchor": "top",
         "text-field": "{name}",
-        "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-        "text-offset": [0, 0.6],
-        "text-anchor": "top"
+        "text-letter-spacing": 0.02,
+        "text-max-width": 8,
+        "icon-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-blur": 0,
+        "text-color": "rgba(25, 118, 210, 1)",
+        "text-halo-width": 1,
+        "text-halo-color": "rgba(255, 255, 255, 1)"
       }
     }
   ]
