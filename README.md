@@ -116,3 +116,9 @@ SELECT * FROM metadata;
     }
   ]
 ```
+
+5. Join multiple .mbtiles with different layer ids into one composite.mbtiles
+
+```
+tile-join -o composite.mbtiles poi_custom.mbtiles poi_vinh.mbtiles --no-tile-size-limit
+```
