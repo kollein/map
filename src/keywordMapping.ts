@@ -18,35 +18,33 @@ export const keywordMapping: { [key: string]: KeywordMappingResult } = {
   'nhà-hàng': { class: 'amenity', subclass: 'restaurant', rank: 3 },
   'quán-ăn': { class: 'amenity', subclass: 'restaurant', rank: 3 },
 
+  company: { class: 'amenity', subclass: 'company', rank: 3 },
   'công-ty': { class: 'amenity', subclass: 'company', rank: 3 },
 
   building: { class: 'amenity', subclass: 'building', rank: 3 },
   'toà-nhà': { class: 'amenity', subclass: 'building', rank: 3 },
 
   hotel: { class: 'amenity', subclass: 'hotel', rank: 3 },
-  'khác-sạn': { class: 'amenity', subclass: 'hotel', rank: 3 },
-  'nhà-cho-thuê': { class: 'amenity', subclass: 'hotel', rank: 3 },
-  'phòng-trọ': { class: 'amenity', subclass: 'hotel', rank: 3 },
+  'khách-sạn': { class: 'amenity', subclass: 'hotel', rank: 3 },
+  'nhà-nghỉ': { class: 'amenity', subclass: 'hotel', rank: 3 },
 
   hospital: { class: 'amenity', subclass: 'hospital', rank: 4 },
-  clinic: { class: 'amenity', subclass: 'hospital', rank: 4 },
-  pharmacity: { class: 'amenity', subclass: 'hospital', rank: 4 },
   'bệnh-viện': { class: 'amenity', subclass: 'hospital', rank: 4 },
   'trạm-y-tế': { class: 'amenity', subclass: 'hospital', rank: 4 },
-  'nhà-thuốc': { class: 'amenity', subclass: 'hospital', rank: 4 },
-  'phòng-răng': { class: 'amenity', subclass: 'hospital', rank: 4 },
+  'nhà-thuốc-tây': { class: 'amenity', subclass: 'hospital', rank: 4 },
+  'phòng-khám': { class: 'amenity', subclass: 'hospital', rank: 4 },
 
   school: { class: 'amenity', subclass: 'school', rank: 4 },
   'trường-học': { class: 'amenity', subclass: 'school', rank: 4 },
 
-  'nhà-thờ': { class: 'amenity', subclass: 'church', rank: 5 },
+  'place-of-church': { class: 'amenity', subclass: 'church', rank: 4 },
 
-  chùa: { class: 'amenity', subclass: 'pagoda', rank: 5 },
-  miếu: { class: 'amenity', subclass: 'pagoda', rank: 5 },
+  chùa: { class: 'amenity', subclass: 'pagoda', rank: 4 },
+  miếu: { class: 'amenity', subclass: 'pagoda', rank: 4 },
 
-  'hớt-tóc': { class: 'information', subclass: 'marker', rank: 5 },
-  'salon-tóc': { class: 'information', subclass: 'marker', rank: 5 },
-  'trang-điểm': { class: 'information', subclass: 'marker', rank: 5 },
+  'hớt-tóc': { class: 'amenity', subclass: 'marker', rank: 4 },
+  'salon-tóc': { class: 'amenity', subclass: 'marker', rank: 4 },
+  'trang-điểm': { class: 'amenity', subclass: 'marker', rank: 4 },
 }
 
 export function getKeywordMapping(keyword: string): KeywordMappingResult | null {

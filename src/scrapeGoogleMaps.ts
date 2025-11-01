@@ -136,6 +136,7 @@ async function getPageData(browser: Browser, keyword: string, lat: number, lng: 
   const url = `https://www.google.com/maps/search/${encodeURIComponent(
     searchKeyword
   )}/@${jitterLat},${jitterLng},${ZOOM}z`
+  console.log(`🌍 Crawling url: ${url}`)
 
   const page = await browser.newPage()
   await page.setViewport({ width: 1280, height: 800 })
@@ -159,8 +160,12 @@ async function getPageData(browser: Browser, keyword: string, lat: number, lng: 
   const feedSelector = 'div[role="feed"]'
   let prevCount = 0
   const scrollIterations = lastDistance < 10 ? MAX_SCROLL_ITER : MIN_SCROLL_ITER
+  let queryClass = '.Nv2PK.THOPZb'
   for (let i = 0; i < scrollIterations; i++) {
-    const count = await page.$$eval('.Nv2PK.THOPZb.CpccDe', (els: any) => els.length)
+    const try1 = await page.$$eval(queryClass, (els: any) => els.length)
+    if (try1 === 0) queryClass = '.hfpxzc'
+    const count = try1 === 0 ? try1 : await page.$$eval(queryClass, (els: any) => els.length)
+
     if (count > prevCount) {
       prevCount = count
       console.log(`  📜 loaded ${count} items (scroll ${i + 1}) for keyword ${keyword}`)
@@ -173,7 +178,7 @@ async function getPageData(browser: Browser, keyword: string, lat: number, lng: 
     } else break
   }
 
-  const items = await page.$$eval('.Nv2PK.THOPZb.CpccDe', (nodes: any) => {
+  const items = await page.$$eval(queryClass, (nodes: any) => {
     return nodes
       .map((el: any) => {
         const a = el.querySelector('a')

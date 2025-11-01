@@ -2,7 +2,7 @@ node_modules/
 *.har
 *.geojson
 *.mbtiles
-data/vietnam-latest.osm.pbf
+data/*.pbf
 data/vietnam-latest.osrm*
 data/fonts/*
 data/tiles_*
