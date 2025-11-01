@@ -7,7 +7,7 @@ export async function searchPlacesByProvince(province: string, query: string) {
   const indexName = getPlaceIndexByProvince(province)
 
   const result = await client.search({
-    index: getPlaceIndexByProvince('baclieu'),
+    index: indexName,
     query: {
       bool: {
         must: [
