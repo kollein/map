@@ -33,7 +33,7 @@ const stateFile = path.resolve(`${folderPath}/state_${keyword}.json`)
 // Crawl parameters
 const STEP_METERS = 3000
 const MAX_SCROLL_ITER = 20
-const MIN_SCROLL_ITER = 1
+const MIN_SCROLL_ITER = 10
 const SCROLL_DELAY_MIN = 1000
 const SCROLL_DELAY_VAR = 400
 const SAVE_THRESHOLD = 1
@@ -94,7 +94,7 @@ async function safeSave() {
         requireCheck: false,
       }
       await sendPlaceMessage(message)
-      console.log(`✈️ Send place ${item.name} to Kafka for keyword ${keyword}`)
+      console.log(chalk.bold.greenBright(`✈️ Send place ${item.name} to Kafka for keyword ${keyword}`))
     } catch (err) {
       console.error(`⚠️ Failed to send Kafka message for ${item.name}:`, err)
     }

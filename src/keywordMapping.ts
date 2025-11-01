@@ -18,6 +18,11 @@ export const keywordMapping: { [key: string]: KeywordMappingResult } = {
   'nhà-hàng': { class: 'amenity', subclass: 'restaurant', rank: 3 },
   'quán-ăn': { class: 'amenity', subclass: 'restaurant', rank: 3 },
 
+  'công-ty': { class: 'amenity', subclass: 'company', rank: 3 },
+
+  building: { class: 'amenity', subclass: 'building', rank: 3 },
+  'toà-nhà': { class: 'amenity', subclass: 'building', rank: 3 },
+
   hospital: { class: 'amenity', subclass: 'hospital', rank: 4 },
   clinic: { class: 'amenity', subclass: 'hospital', rank: 4 },
   pharmacity: { class: 'amenity', subclass: 'hospital', rank: 4 },
